@@ -6,7 +6,7 @@
   "emailRequire": "Vui lòng nhập địa chỉ email",
   "emailInvalid": "Địa chỉ email không hợp lệ",
   "passwordRequire": "Vui lòng nhập mật khẩu",
-  "minPasswordInvalid": "Mật khẩu tối thiểu 4 ký tự",
+  "minPasswordInvalid": "Mật khẩu tối thiểu 6 ký tự",
   "signIn": "Đăng nhập",
   "recommendSignUp": "Bạn chưa có tài khoản?",
   "signUp": "Tạo tài khoản"
