@@ -2,9 +2,9 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Box, Button, Paper, Switch, TextField, Typography, Checkbox } from '@mui/material';
-import React from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { Box, Button, Checkbox, TextField, Typography } from '@mui/material';
+import React, { useCallback, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { FormattedMessage } from 'react-intl';
 import { validEmailRegex } from '../../../utils';
 
@@ -14,9 +14,14 @@ interface ILoginParams {
   rememberMe: boolean;
 }
 
-interface Props {}
+interface Props {
+  onLogin(value: ILoginParams): void;
+}
 
 const LoginForm = (props: Props) => {
+  const { onLogin } = props;
+  const [formValues, setFormValues] = useState<ILoginParams>({ email: '', password: '', rememberMe: false });
+
   const {
     control,
     register,
@@ -24,93 +29,101 @@ const LoginForm = (props: Props) => {
     formState: { errors },
   } = useForm<ILoginParams>();
 
-  const onSubmit = handleSubmit((data: ILoginParams) => {
-    console.log(data);
-  });
+  const onSubmit = useCallback(
+    (data: ILoginParams) => {
+      console.log(data);
+      onLogin(formValues);
+    },
+    [formValues, onLogin],
+  );
 
   return (
-    <div>
-      <Paper
-        elevation={10}
-        sx={{ margin: '10vh auto', padding: '15vh 5vh', display: 'flex', flexDirection: 'column', width: '25%' }}
+    <form action="">
+      <Controller
+        render={({ field }) => (
+          <TextField
+            {...field}
+            id="outlined-basic"
+            className="email"
+            label="Email"
+            value={formValues.email}
+            variant="outlined"
+            sx={{ margin: '5px 0', width: '100%' }}
+            {...register('email', {
+              required: true,
+              pattern: validEmailRegex,
+            })}
+            onChange={(e) => setFormValues({ ...formValues, email: e.target.value })}
+          />
+        )}
+        name="email"
+        control={control}
+      />
+      {errors?.email?.type === 'required' && (
+        <p style={{ color: 'red' }}>
+          <FormattedMessage id="emailRequire" />
+        </p>
+      )}
+      {errors?.email?.type === 'pattern' && (
+        <p style={{ color: 'red' }}>
+          <FormattedMessage id="emailInvalid" />
+        </p>
+      )}
+      <Controller
+        render={({ field }) => (
+          <TextField
+            {...field}
+            id="outlined-basic"
+            className="password"
+            label="Password"
+            type="password"
+            value={formValues.password}
+            variant="outlined"
+            sx={{ margin: '5px 0', width: '100%' }}
+            {...register('password', {
+              required: true,
+              minLength: 6,
+            })}
+            onChange={(e) => setFormValues({ ...formValues, password: e.target.value })}
+          />
+        )}
+        name="password"
+        control={control}
+      />
+      {errors?.password?.type === 'required' && (
+        <p style={{ color: 'red' }}>
+          <FormattedMessage id="passwordRequire" />
+        </p>
+      )}
+      {errors?.password?.type === 'minLength' && (
+        <p style={{ color: 'red' }}>
+          <FormattedMessage id="minPasswordInvalid" />
+        </p>
+      )}
+      <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+        <Controller
+          name="rememberMe"
+          control={control}
+          render={({ field }) => (
+            <Checkbox
+              {...field}
+              checked={formValues.rememberMe}
+              onChange={(e) => setFormValues({ ...formValues, rememberMe: !!e.target.checked })}
+            />
+          )}
+        />
+        <Typography variant="subtitle1" display="block" sx={{ alignSelf: 'center' }}>
+          Remember Me
+        </Typography>
+      </Box>
+      <Button
+        variant="contained"
+        sx={{ margin: '5px 0', width: '100%', height: '48px', borderRadius: '8px' }}
+        onClick={handleSubmit(onSubmit)}
       >
-        <Typography variant="h3" gutterBottom component="div" sx={{ color: '#1976d2', fontWeight: 'bold' }}>
-          Welcome back
-        </Typography>
-        <Typography variant="h6" gutterBottom component="div" sx={{ color: '#C4C4C4' }}>
-          Enter your email and password to sign in
-        </Typography>
-        <form action="">
-          <Controller
-            render={({ field }) => (
-              <TextField
-                {...field}
-                id="outlined-basic"
-                className="email"
-                label="Email"
-                variant="outlined"
-                sx={{ borderRadius: '12px', margin: '5px 0' }}
-                {...register('email', {
-                  required: true,
-                  pattern: validEmailRegex,
-                })}
-              />
-            )}
-            name="email"
-            control={control}
-            defaultValue=""
-          />
-          {errors?.email?.type === 'required' && (
-            <p style={{ color: 'red' }}>
-              <FormattedMessage id="emailRequire" />
-            </p>
-          )}
-          {errors?.email?.type === 'pattern' && (
-            <p style={{ color: 'red' }}>
-              <FormattedMessage id="emailInvalid" />
-            </p>
-          )}
-          <Controller
-            render={({ field }) => (
-              <TextField
-                {...field}
-                id="outlined-basic"
-                className="password"
-                label="Password"
-                variant="outlined"
-                sx={{ borderRadius: '12px', margin: '5px 0' }}
-                {...register('password', {
-                  required: true,
-                  minLength: 6,
-                })}
-              />
-            )}
-            name="password"
-            control={control}
-            defaultValue=""
-          />
-          {errors?.password?.type === 'required' && (
-            <p style={{ color: 'red' }}>
-              <FormattedMessage id="passwordRequire" />
-            </p>
-          )}
-          {errors?.password?.type === 'minLength' && (
-            <p style={{ color: 'red' }}>
-              <FormattedMessage id="minPasswordInvalid" />
-            </p>
-          )}
-          <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-            <Controller name="rememberMe" control={control} render={({ field }) => <Checkbox {...field} />} />
-            <Typography variant="subtitle1" display="block" sx={{ alignSelf: 'center' }}>
-              Remember Me
-            </Typography>
-          </Box>
-          <Button variant="contained" sx={{ margin: '5px 0', height: '46px', borderRadius: '8px' }} onClick={onSubmit}>
-            <FormattedMessage id="signIn" />
-          </Button>
-        </form>
-      </Paper>
-    </div>
+        <FormattedMessage id="signIn" />
+      </Button>
+    </form>
   );
 };
 
