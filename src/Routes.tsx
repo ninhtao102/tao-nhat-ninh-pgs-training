@@ -24,7 +24,7 @@ export const Routes = (props: Props) => {
           <Route path={ROUTES.contact} component={ContactPage} />
           <Route path={ROUTES.productList} component={ProductListPage} />
 
-          <Route path="/" component={LoginPage} />
+          <ProtectedRoute path="/" component={ProductListPage} />
         </Switch>
       </Header>
     </Suspense>

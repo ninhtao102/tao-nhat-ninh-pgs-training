@@ -14,7 +14,9 @@ export const setUserInfo = createCustomAction('auth/setUserInfo', (data: IUser) 
   data,
 }));
 
-const actions = { setAuthorization, setUserInfo };
+export const resetData = createCustomAction('auth/resetData', () => ({}));
+
+const actions = { setAuthorization, setUserInfo, resetData };
 
 type Action = ActionType<typeof actions>;
 

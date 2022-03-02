@@ -26,57 +26,60 @@ const SideBar = (props: Props) => {
     setOpenUsers(!openUsers);
   };
   return (
-    <Drawer
-      open={props.sideBarOpen}
-      onClose={() => props.closeSideBar()}
-      anchor="left"
-      variant="persistent"
-      sx={{
-        width: drawerWidth,
-        flexShrink: 0,
-        height: 'calc(100vh - 64px)',
-        transition: 'all 0.3s ease-in-out',
-        '& .MuiDrawer-paper': {
-          backgroundColor: '#323259',
+    <div className="" style={{ backgroundColor: '#323259', marginTop: '64px', zIndex: 1 }}>
+      <Drawer
+        open={props.sideBarOpen}
+        onClose={() => props.closeSideBar()}
+        anchor="left"
+        variant="persistent"
+        sx={{
           width: drawerWidth,
-          boxSizing: 'border-box',
-          position: 'relative',
-          height: '100%',
-          color: 'white',
-        },
-      }}
-    >
-      <List component="nav" aria-labelledby="nested-list-subheader">
-        <ListItemButton onClick={handleClickCatalog}>
-          <ListItemIcon>
-            <LocalOfferOutlinedIcon sx={{ color: '#fff' }} />
-          </ListItemIcon>
-          <ListItemText primary="Catalog" />
-          {openCatalog ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={openCatalog} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ mx: 2, borderTop: '1px solid #000' }}>
-              <ListItemText primary="Products" />
-            </ListItemButton>
-          </List>
-        </Collapse>
-        <ListItemButton onClick={handleClickUsers} sx={{ borderTop: '1px solid #000' }}>
-          <ListItemIcon>
-            <GroupOutlinedIcon sx={{ color: '#fff' }} />
-          </ListItemIcon>
-          <ListItemText primary="Users" />
-          {openUsers ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={openUsers} timeout="auto" unmountOnExit>
-          <List component="div" disablePadding>
-            <ListItemButton sx={{ mx: 2, borderTop: '1px solid #000' }}>
-              <ListItemText primary="Users list" />
-            </ListItemButton>
-          </List>
-        </Collapse>
-      </List>
-    </Drawer>
+          flexShrink: 0,
+          height: 'calc(100vh - 64px)',
+          transition: 'all 0.5s ease-in-out',
+          '& .MuiDrawer-paper': {
+            backgroundColor: '#323259',
+            width: drawerWidth,
+            boxSizing: 'border-box',
+            position: 'relative',
+            // height: '100%',
+            minHeight: '150vh',
+            color: 'white',
+          },
+        }}
+      >
+        <List component="nav" aria-labelledby="nested-list-subheader">
+          <ListItemButton onClick={handleClickCatalog}>
+            <ListItemIcon>
+              <LocalOfferOutlinedIcon sx={{ color: '#fff' }} />
+            </ListItemIcon>
+            <ListItemText primary="Catalog" />
+            {openCatalog ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={openCatalog} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItemButton sx={{ mx: 2, borderTop: '1px solid #000' }}>
+                <ListItemText primary="Products" />
+              </ListItemButton>
+            </List>
+          </Collapse>
+          <ListItemButton onClick={handleClickUsers} sx={{ borderTop: '1px solid #000' }}>
+            <ListItemIcon>
+              <GroupOutlinedIcon sx={{ color: '#fff' }} />
+            </ListItemIcon>
+            <ListItemText primary="Users" />
+            {openUsers ? <ExpandLess /> : <ExpandMore />}
+          </ListItemButton>
+          <Collapse in={openUsers} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
+              <ListItemButton sx={{ mx: 2, borderTop: '1px solid #000' }}>
+                <ListItemText primary="Users list" />
+              </ListItemButton>
+            </List>
+          </Collapse>
+        </List>
+      </Drawer>
+    </div>
   );
 };
 
