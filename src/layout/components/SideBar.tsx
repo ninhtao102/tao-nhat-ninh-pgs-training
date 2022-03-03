@@ -1,12 +1,8 @@
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
-import { Collapse, Drawer, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Collapse, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Link } from '@mui/material';
 import React from 'react';
 
 interface Props {
@@ -15,7 +11,7 @@ interface Props {
 }
 
 const SideBar = (props: Props) => {
-  const drawerWidth = props.sideBarOpen ? '35vh' : 0;
+  const drawerWidth = props.sideBarOpen ? '16vw' : 0;
   const [openCatalog, setOpenCatalog] = React.useState(true);
   const [openUsers, setOpenUsers] = React.useState(true);
 
@@ -26,7 +22,7 @@ const SideBar = (props: Props) => {
     setOpenUsers(!openUsers);
   };
   return (
-    <div className="" style={{ backgroundColor: '#323259', marginTop: '64px', zIndex: 1 }}>
+    <div style={{ backgroundColor: '#323259', marginTop: '64px', zIndex: 1 }}>
       <Drawer
         open={props.sideBarOpen}
         onClose={() => props.closeSideBar()}
@@ -42,14 +38,13 @@ const SideBar = (props: Props) => {
             width: drawerWidth,
             boxSizing: 'border-box',
             position: 'relative',
-            // height: '100%',
             minHeight: '150vh',
             color: 'white',
           },
         }}
       >
-        <List component="nav" aria-labelledby="nested-list-subheader">
-          <ListItemButton onClick={handleClickCatalog}>
+        <List component="nav" aria-labelledby="nested-list-subheader" sx={{ width: 'inherit', position: 'fixed' }}>
+          <ListItemButton onClick={handleClickCatalog} sx={{ color: '#fff', ':hover': { color: '#6f53b4' } }}>
             <ListItemIcon>
               <LocalOfferOutlinedIcon sx={{ color: '#fff' }} />
             </ListItemIcon>
@@ -58,12 +53,19 @@ const SideBar = (props: Props) => {
           </ListItemButton>
           <Collapse in={openCatalog} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItemButton sx={{ mx: 2, borderTop: '1px solid #000' }}>
-                <ListItemText primary="Products" />
+              <ListItemButton
+                sx={{ mx: 2, borderTop: '1px solid #000', ':hover #productListLink': { color: '#6f53b4' } }}
+              >
+                <Link id="productListLink" href="#" underline="none" sx={{ color: '#fff' }}>
+                  <ListItemText primary="Products" />
+                </Link>
               </ListItemButton>
             </List>
           </Collapse>
-          <ListItemButton onClick={handleClickUsers} sx={{ borderTop: '1px solid #000' }}>
+          <ListItemButton
+            onClick={handleClickUsers}
+            sx={{ borderTop: '1px solid #000', ':hover': { color: '#6f53b4' } }}
+          >
             <ListItemIcon>
               <GroupOutlinedIcon sx={{ color: '#fff' }} />
             </ListItemIcon>
@@ -72,8 +74,10 @@ const SideBar = (props: Props) => {
           </ListItemButton>
           <Collapse in={openUsers} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItemButton sx={{ mx: 2, borderTop: '1px solid #000' }}>
-                <ListItemText primary="Users list" />
+              <ListItemButton sx={{ mx: 2, borderTop: '1px solid #000', ':hover #userListLink': { color: '#6f53b4' } }}>
+                <Link id="userListLink" href="#" underline="none" sx={{ color: '#fff' }}>
+                  <ListItemText primary="Users list" />
+                </Link>
               </ListItemButton>
             </List>
           </Collapse>

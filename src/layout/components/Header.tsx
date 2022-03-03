@@ -26,7 +26,7 @@ const Header: FC<Props> = ({ children }) => {
   const auth = Cookies.get(ACCESS_TOKEN_KEY);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const location = useLocation();
-  const [sideBarOpen, setSideBarOpen] = React.useState(false);
+  const [sideBarOpen, setSideBarOpen] = React.useState(true);
   const [isHidden, setIsHidden] = React.useState(location.pathname === ROUTES.login);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {

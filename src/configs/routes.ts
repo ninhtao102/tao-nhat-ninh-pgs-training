@@ -3,5 +3,8 @@ export const ROUTES = {
   contact: '/contact',
   login: '/login',
   signUp: '/sign-up',
-  productList: '/product',
+  productList: '/products/manage-product',
+  productForm: '/products/new-product',
+  userList: '/user/manage-user',
+  userForm: '/user/new-user',
 };

@@ -7,6 +7,7 @@ const HomePage = lazy(() => import('./modules/home/pages/HomePage'));
 const ContactPage = lazy(() => import('./modules/home/pages/ContactPage'));
 const LoginPage = lazy(() => import('./modules/auth/pages/LoginPage'));
 const ProductListPage = lazy(() => import('./modules/product/pages/ProductListPage'));
+const AddProductPage = lazy(() => import('./modules/product/pages/AddProductPage'));
 
 import Header from './layout/components/Header';
 
@@ -23,6 +24,7 @@ export const Routes = (props: Props) => {
           <ProtectedRoute path={ROUTES.home} component={HomePage} />
           <Route path={ROUTES.contact} component={ContactPage} />
           <Route path={ROUTES.productList} component={ProductListPage} />
+          <Route path={ROUTES.productForm} component={AddProductPage} />
 
           <ProtectedRoute path="/" component={ProductListPage} />
         </Switch>
