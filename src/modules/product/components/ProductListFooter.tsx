@@ -8,7 +8,6 @@ const ProductListFooter = (props: Props) => {
     <>
       <Box
         sx={{
-          // position: 'fixed',
           backgroundColor: '#323259',
           margin: '5vh 0 1vh 0',
           padding: '3vh 5vh',
