@@ -2,17 +2,77 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { Box, Button, Grid, Input, MenuItem, Select, Typography, Drawer, Collapse } from '@mui/material';
-import React, { useState } from 'react';
 import KeyboardDoubleArrowDownRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowDownRounded';
+import {
+  Box,
+  Button,
+  Checkbox,
+  Collapse,
+  FormControlLabel,
+  Grid,
+  Input,
+  MenuItem,
+  Typography,
+  Select,
+} from '@mui/material';
+import React, { useCallback, useEffect, useState } from 'react';
+import { API_PATHS } from '../../../configs/api';
+import { Controller, useForm } from 'react-hook-form';
 
 interface Props {}
 
+interface IFilter {
+  keywords: string;
+  categories: string;
+  stockStatus: string;
+  availability: string;
+  vendor: string;
+}
+
+interface ICategories {
+  id: string;
+  name: string;
+}
+
+const stockStatus = ['In stock', 'Low stock', 'SOLD'];
+const availability = ['Only enabled', 'Only disabled'];
+
 const ProductFilter = (props: Props) => {
+  const [categoriesSelector, setCategoriesSelector] = useState<ICategories[]>();
+  const [filterValues, setFilterValues] = useState<IFilter>({
+    keywords: '',
+    categories: '',
+    stockStatus: '',
+    availability: '',
+    vendor: '',
+  });
   const [open, setOpen] = useState(false);
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IFilter>();
+
   const handleOpen = () => {
     setOpen((prev) => !prev);
   };
+
+  const fetchData = useCallback(() => {
+    fetch(API_PATHS.categoryList)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('category:', data);
+        setCategoriesSelector(data.data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   return (
     <>
@@ -39,13 +99,37 @@ const ProductFilter = (props: Props) => {
                     },
                   }}
                 />
+                <Controller
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      id="outlined-basic"
+                      color="secondary"
+                      className="keywords"
+                      value={filterValues.keywords}
+                      sx={{
+                        backgroundColor: '#252547',
+                        color: '#fff',
+                        marginTop: '2vh',
+                        padding: '0 16px',
+                        border: '1px solid #b18aff',
+                        width: '100%',
+                        height: '40px',
+                        '&: hover': {
+                          backgroundColor: '#1b1b38',
+                        },
+                      }}
+                      // onChange={(e) => setFilterValues({ ...filterValues, keywords: e.target.value })}
+                    />
+                  )}
+                  name="keywords"
+                  control={control}
+                />
               </Grid>
               <Grid item xs={3}>
                 <Select
-                  labelId="category-select-label"
-                  id="category-select"
                   color="secondary"
-                  defaultValue="all"
+                  // onChange={(e) => {setCategoriesSelector(e.target.value)}}
                   sx={{
                     backgroundColor: '#252547',
                     color: '#fff',
@@ -55,10 +139,15 @@ const ProductFilter = (props: Props) => {
                       backgroundColor: '#1b1b38',
                     },
                   }}
-                  //   value={category}
-                  //   onChange={handleChange}
+                  value={categoriesSelector}
                 >
-                  <MenuItem value={'all'}>Any category</MenuItem>
+                  {(categoriesSelector || []).map((item) => {
+                    return (
+                      <MenuItem key={item.id} value={categoriesSelector?.length}>
+                        {item.name}
+                      </MenuItem>
+                    );
+                  })}
                 </Select>
               </Grid>
               <Grid item xs={3}>
@@ -66,7 +155,6 @@ const ProductFilter = (props: Props) => {
                   labelId="stock-status-select-label"
                   id="stock-status-select"
                   color="secondary"
-                  defaultValue="all"
                   sx={{
                     backgroundColor: '#252547',
                     color: '#fff',
@@ -79,7 +167,13 @@ const ProductFilter = (props: Props) => {
                   //   value={stockStatus}
                   //   onChange={handleChange}
                 >
-                  <MenuItem value={'all'}>Any stock status</MenuItem>
+                  {stockStatus.map((item, i) => {
+                    return (
+                      <MenuItem key={i} value={item}>
+                        {item}
+                      </MenuItem>
+                    );
+                  })}
                 </Select>
               </Grid>
               <Grid item xs={1}>
@@ -108,16 +202,31 @@ const ProductFilter = (props: Props) => {
             }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={2}>
-                <Box>
-                  <Typography
-                    variant="subtitle1"
-                    gutterBottom
-                    component="div"
-                    sx={{ color: '#fff', alignSelf: 'center' }}
-                  >
+              <Grid item xs={3}>
+                <Box sx={{ width: '40vh', display: 'flex' }}>
+                  <Typography variant="subtitle1" gutterBottom component="div" sx={{ color: '#fff' }}>
                     Search in:
                   </Typography>
+                  <Box sx={{ color: '#fff', width: '22vh', marginLeft: '1vh' }}>
+                    <FormControlLabel
+                      value="name"
+                      control={<Checkbox sx={{ color: '#fff' }} />}
+                      label="Name"
+                      labelPlacement="end"
+                    />
+                    <FormControlLabel
+                      value="sku"
+                      control={<Checkbox sx={{ color: '#fff' }} />}
+                      label="SKU"
+                      labelPlacement="end"
+                    />
+                    <FormControlLabel
+                      value="fullDescription"
+                      control={<Checkbox sx={{ color: '#fff' }} />}
+                      label="Full Description"
+                      labelPlacement="end"
+                    />
+                  </Box>
                 </Box>
               </Grid>
               <Grid item xs={4}>
@@ -134,7 +243,6 @@ const ProductFilter = (props: Props) => {
                     labelId="availability-select-label"
                     id="availability-select"
                     color="secondary"
-                    defaultValue="all"
                     sx={{
                       backgroundColor: '#252547',
                       margin: '0 16px',
@@ -148,7 +256,13 @@ const ProductFilter = (props: Props) => {
                     //   value={category}
                     //   onChange={handleChange}
                   >
-                    <MenuItem value={'all'}>Any availability status</MenuItem>
+                    {availability.map((item, i) => {
+                      return (
+                        <MenuItem key={i} value={item}>
+                          {item}
+                        </MenuItem>
+                      );
+                    })}
                   </Select>
                 </Box>
               </Grid>

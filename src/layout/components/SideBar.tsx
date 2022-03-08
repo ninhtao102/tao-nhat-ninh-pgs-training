@@ -22,7 +22,7 @@ const SideBar = (props: Props) => {
     setOpenUsers(!openUsers);
   };
   return (
-    <div style={{ backgroundColor: '#323259', marginTop: '64px', zIndex: 1 }}>
+    <div style={{ backgroundColor: '#323259', marginTop: '64px', zIndex: 1, boxShadow: '1px 1px 8px black' }}>
       <Drawer
         open={props.sideBarOpen}
         onClose={() => props.closeSideBar()}
@@ -56,7 +56,12 @@ const SideBar = (props: Props) => {
               <ListItemButton
                 sx={{ mx: 2, borderTop: '1px solid #000', ':hover #productListLink': { color: '#6f53b4' } }}
               >
-                <Link id="productListLink" href="#" underline="none" sx={{ color: '#fff' }}>
+                <Link
+                  id="productListLink"
+                  href="http://localhost:3000/products/manage-product"
+                  underline="none"
+                  sx={{ color: '#fff' }}
+                >
                   <ListItemText primary="Products" />
                 </Link>
               </ListItemButton>
@@ -75,7 +80,12 @@ const SideBar = (props: Props) => {
           <Collapse in={openUsers} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <ListItemButton sx={{ mx: 2, borderTop: '1px solid #000', ':hover #userListLink': { color: '#6f53b4' } }}>
-                <Link id="userListLink" href="#" underline="none" sx={{ color: '#fff' }}>
+                <Link
+                  id="userListLink"
+                  href="http://localhost:3000/user/manage-user"
+                  underline="none"
+                  sx={{ color: '#fff' }}
+                >
                   <ListItemText primary="Users list" />
                 </Link>
               </ListItemButton>

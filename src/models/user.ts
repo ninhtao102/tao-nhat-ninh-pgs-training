@@ -13,3 +13,9 @@ export interface IUser {
   countOfLoginAttempts: string;
   forceChangePassword: string;
 }
+
+export interface IUserItem {
+  id: string;
+
+  name: string;
+}

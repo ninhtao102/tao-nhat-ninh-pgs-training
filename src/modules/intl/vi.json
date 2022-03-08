@@ -9,5 +9,6 @@
   "minPasswordInvalid": "Mật khẩu tối thiểu 6 ký tự",
   "signIn": "Đăng nhập",
   "recommendSignUp": "Bạn chưa có tài khoản?",
-  "signUp": "Tạo tài khoản"
+  "signUp": "Tạo tài khoản",
+  "fieldRequire": "Không bỏ trống trường này"
 }

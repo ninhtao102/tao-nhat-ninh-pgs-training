@@ -17,25 +17,24 @@ import {
 import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
 import { API_PATHS } from '../../../configs/api';
-import { ITableItem } from '../../../models/table';
+import { IProductItem } from '../../../models/product';
 import ModalUpdate from './ModalUpdate';
 
 interface Props {}
 
-// const columns: GridColDef[] = [
-//   { field: 'id', headerName: '', width: 70 },
-//   { field: 'id', headerName: 'SKU', width: 70 },
-//   { field: 'id', headerName: 'Name', width: 70 },
-//   { field: 'id', headerName: 'Category', width: 70 },
-//   { field: 'id', headerName: 'Price', width: 70 },
-//   { field: 'id', headerName: 'In stock', width: 70 },
-//   { field: 'id', headerName: 'Vendor', width: 70 },
-//   { field: 'id', headerName: 'Arrival Date', width: 70 },
-//   { field: 'id', headerName: '', width: 70 },
-// ];
+const columns = [
+  { field: 'id', headerName: 'SKU' },
+  { field: 'id', headerName: 'Name' },
+  { field: 'id', headerName: 'Category' },
+  { field: 'id', headerName: 'Price' },
+  { field: 'id', headerName: 'In stock' },
+  { field: 'id', headerName: 'Vendor' },
+  { field: 'id', headerName: 'Arrival Date' },
+  { field: 'id', headerName: '' },
+];
 
 const ProductListTable = (props: Props) => {
-  const [rows, setRows] = useState<ITableItem[]>();
+  const [rows, setRows] = useState<IProductItem[]>();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [totalItem, setTotalItem] = useState();
@@ -75,7 +74,7 @@ const ProductListTable = (props: Props) => {
         sx={{
           marginBottom: '12vh',
           overflow: 'hidden',
-          width: 'calc(100vw - 340px)',
+          width: 'calc(100vw - 22vw)',
         }}
       >
         <TableContainer component={Paper}>
@@ -89,31 +88,14 @@ const ProductListTable = (props: Props) => {
           >
             <TableHead>
               <TableRow>
-                <TableCell align="left" sx={{ color: '#fff' }}>
+                <TableCell align="left">
                   <Checkbox size="small" sx={{ color: '#fff' }} />
                 </TableCell>
-                <TableCell align="left" sx={{ color: '#fff', fontWeight: 'bold', fontSize: '16px' }}>
-                  SKU
-                </TableCell>
-                <TableCell align="left" sx={{ color: '#fff', fontWeight: 'bold', fontSize: '16px' }}>
-                  Name
-                </TableCell>
-                <TableCell align="left" sx={{ color: '#fff', fontWeight: 'bold', fontSize: '16px' }}>
-                  Category
-                </TableCell>
-                <TableCell align="left" sx={{ color: '#fff', fontWeight: 'bold', fontSize: '16px' }}>
-                  Price
-                </TableCell>
-                <TableCell align="left" sx={{ color: '#fff', fontWeight: 'bold', fontSize: '16px' }}>
-                  In stock
-                </TableCell>
-                <TableCell align="left" sx={{ color: '#fff', fontWeight: 'bold', fontSize: '16px' }}>
-                  Vendor
-                </TableCell>
-                <TableCell align="left" sx={{ color: '#fff', fontWeight: 'bold', fontSize: '16px' }}>
-                  Arrival Date
-                </TableCell>
-                <TableCell align="left"></TableCell>
+                {columns.map((col) => (
+                  <TableCell key={col.field} align="left" sx={{ color: '#fff', fontWeight: 'bold', fontSize: '16px' }}>
+                    {col.headerName}
+                  </TableCell>
+                ))}
               </TableRow>
             </TableHead>
             <TableBody>

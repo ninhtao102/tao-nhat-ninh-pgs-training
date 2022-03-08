@@ -1,12 +1,14 @@
 import { Box, Button, Link } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import ProductFilter from '../components/ProductFilter';
 import ProductListFooter from '../components/ProductListFooter';
 import ProductListTable from '../components/ProductListTable';
+import { IProductFilter } from '../../../models/product';
 
 interface Props {}
 
 const ProductListPage = (props: Props) => {
+  const [filterValue, setFilterValue] = useState<IProductFilter>();
   return (
     <>
       <Box
@@ -14,7 +16,6 @@ const ProductListPage = (props: Props) => {
           backgroundColor: '#1b1b37',
           width: '100vw',
           padding: '5vh',
-          // paddingBottom: '0px',
         }}
       >
         <ProductFilter />
@@ -43,7 +44,7 @@ const ProductListPage = (props: Props) => {
           </Link>
         </Button>
         <ProductListTable />
-        <Box sx={{ position: 'fixed', bottom: '3px', width: 'calc(100vw - 340px)' }}>
+        <Box sx={{ position: 'fixed', bottom: '3px', width: 'calc(100vw - 22vw)' }}>
           <ProductListFooter />
         </Box>
       </Box>

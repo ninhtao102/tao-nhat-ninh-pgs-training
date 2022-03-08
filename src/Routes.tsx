@@ -8,6 +8,7 @@ const ContactPage = lazy(() => import('./modules/home/pages/ContactPage'));
 const LoginPage = lazy(() => import('./modules/auth/pages/LoginPage'));
 const ProductListPage = lazy(() => import('./modules/product/pages/ProductListPage'));
 const AddProductPage = lazy(() => import('./modules/product/pages/AddProductPage'));
+const UserListPage = lazy(() => import('./modules/user/pages/UserListPage'));
 
 import Header from './layout/components/Header';
 
@@ -25,6 +26,7 @@ export const Routes = (props: Props) => {
           <Route path={ROUTES.contact} component={ContactPage} />
           <Route path={ROUTES.productList} component={ProductListPage} />
           <Route path={ROUTES.productForm} component={AddProductPage} />
+          <Route path={ROUTES.userList} component={UserListPage} />
 
           <ProtectedRoute path="/" component={ProductListPage} />
         </Switch>

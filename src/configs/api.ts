@@ -18,7 +18,6 @@ function getBaseUrl(service: APIService) {
 export const API_PATHS = {
   signIn: `${getBaseUrl(APIService.public)}/authentication/login`,
   productList: `${getBaseUrl(APIService.public)}/products/list`,
-
-  // signIn: `https://api.gearfocus.div4.pgtest.co/api/authentication/login`,
-  // userProfile: `${getBaseUrl(APIService.public)}/user`,
+  categoryList: `${getBaseUrl(APIService.public)}/categories/list`,
+  brands: `${getBaseUrl(APIService.auth)}/brands/list`,
 };
