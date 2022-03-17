@@ -20,4 +20,7 @@ export const API_PATHS = {
   productList: `${getBaseUrl(APIService.public)}/products/list`,
   categoryList: `${getBaseUrl(APIService.public)}/categories/list`,
   brands: `${getBaseUrl(APIService.auth)}/brands/list`,
+  users: `${getBaseUrl(APIService.auth)}/users/list`,
+  role: `${getBaseUrl(APIService.auth)}/commons/role`,
+  country: `${getBaseUrl(APIService.auth)}/commons/country`,
 };

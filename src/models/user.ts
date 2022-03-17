@@ -16,6 +16,17 @@ export interface IUser {
 
 export interface IUserItem {
   id: string;
-
-  name: string;
+  vendor: string;
+  storeName: string;
+  fistName: string;
+  lastName: string;
+  access_level: string;
+  product: number;
+  order: {
+    order_as_buyer: number;
+    order_as_buyer_total: number;
+  };
+  wishlist: string;
+  created: string;
+  last_login: string;
 }

@@ -1,7 +1,7 @@
 import KeyboardBackspaceRoundedIcon from '@mui/icons-material/KeyboardBackspaceRounded';
 import { Button, Link, Box } from '@mui/material';
 import React from 'react';
-import AddProductForm from '../components/AddProductForm';
+import AddProductForm from '../components/form/AddProductForm';
 
 interface Props {}
 

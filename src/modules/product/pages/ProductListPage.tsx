@@ -1,7 +1,7 @@
 import { Box, Button, Link } from '@mui/material';
 import React, { useState } from 'react';
-import ProductFilter from '../components/ProductFilter';
-import ProductListFooter from '../components/ProductListFooter';
+import ProductFilter from '../components/filter/ProductFilter';
+import ProductListFooter from '../components/table/ProductListFooter';
 import ProductListTable from '../components/ProductListTable';
 import { IProductFilter } from '../../../models/product';
 
