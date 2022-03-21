@@ -3,28 +3,23 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import KeyboardDoubleArrowDownRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowDownRounded';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import DateRangePicker, { DateRange } from '@mui/lab/DateRangePicker';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import { DateRange } from '@mui/lab/DateRangePicker';
 import {
   Box,
   Button,
+  Checkbox,
   Collapse,
+  FormControlLabel,
   Grid,
   Input,
   MenuItem,
   Select,
-  TextField,
   Typography,
-  FormControlLabel,
-  Checkbox,
 } from '@mui/material';
-import Cookies from 'js-cookie';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { API_PATHS } from '../../../../configs/api';
+import { API_HEADER, API_PATHS } from '../../../../configs/api';
 import { ICountry, IUserFilter, IUserRole } from '../../../../models/filter';
-import { ACCESS_TOKEN_KEY } from '../../../../utils/constants';
 
 const status = ['Enable', 'Disable', 'Unapproved vendor'];
 
@@ -59,12 +54,7 @@ const UserFilter = (props: Props) => {
   };
 
   const fetchRole = useCallback(() => {
-    fetch(API_PATHS.role, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: Cookies.get(ACCESS_TOKEN_KEY) || '',
-      },
-    })
+    fetch(API_PATHS.role, API_HEADER)
       .then((response) => response.json())
       .then((data) => {
         console.log('role:', data);

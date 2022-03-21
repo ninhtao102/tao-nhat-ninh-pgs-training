@@ -1,34 +1,42 @@
-import { Box, Grid, Input, Typography } from '@mui/material';
-import Cookies from 'js-cookie';
+import CameraAltRoundedIcon from '@mui/icons-material/CameraAltRounded';
+import { Box, Button, Grid, Input, MenuItem, Select, TextField, Typography, Switch } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { FormattedMessage } from 'react-intl';
-import { API_PATHS } from '../../../../configs/api';
+import { API_HEADER, API_PATHS } from '../../../../configs/api';
 import { IProductParams } from '../../../../models/product';
+import { IBrands, ICategories } from '../../../../models/utils';
 import { validEmailRegex } from '../../../../utils';
-import { ACCESS_TOKEN_KEY } from '../../../../utils/constants';
 
 interface Props {}
 
-interface IBrands {
-  id: string;
-  brand: string;
-}
+const baseInputStyle = {
+  backgroundColor: '#252547',
+  color: '#fff',
+  padding: '0 16px',
+  border: '0.1px solid #111',
+  width: '80%',
+  height: '40px',
+  '&: hover': {
+    backgroundColor: '#1b1b38',
+  },
+};
 
 const titleRowForm = [
-  { title: 'Vendor', require: true },
-  { title: 'Product Title', require: true },
-  { title: 'Brand', require: true },
-  { title: 'Condition', require: true },
-  { title: 'SKU', require: false },
-  { title: 'Images', require: true },
-  { title: 'Category', request: true },
-  { title: 'Description', request: true },
-  { title: 'Available', request: false },
+  { title: 'Vendor', require: true, paddingValue: '1vh' },
+  { title: 'Product Title', require: true, paddingValue: '2vh' },
+  { title: 'Brand', require: true, paddingValue: '3vh' },
+  { title: 'Condition', require: true, paddingValue: '3vh' },
+  { title: 'SKU', require: false, paddingValue: '3vh' },
+  { title: 'Images', require: true, paddingValue: '3vh' },
+  { title: 'Category', require: true, paddingValue: '10vh' },
+  { title: 'Description', require: true, paddingValue: '3vh' },
+  { title: 'Available for sale', require: false, paddingValue: '21vh' },
 ];
 
 const AddProductForm = (props: Props) => {
   const [brands, setBrands] = useState<IBrands[]>();
+  const [categories, setCategories] = useState<ICategories[]>();
   const [formValues, setFormValues] = useState<IProductParams>({
     vendor: '',
     productTitle: '',
@@ -49,16 +57,21 @@ const AddProductForm = (props: Props) => {
   } = useForm<IProductParams>();
 
   const fetchBrands = useCallback(() => {
-    fetch(API_PATHS.brands, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: Cookies.get(ACCESS_TOKEN_KEY) || '',
-      },
-    })
+    fetch(API_PATHS.brands, API_HEADER)
       .then((response) => response.json())
       .then((data) => {
-        console.log('brands:', data);
         setBrands(data.data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }, []);
+
+  const fetchCategories = useCallback(() => {
+    fetch(API_PATHS.categories, API_HEADER)
+      .then((response) => response.json())
+      .then((data) => {
+        setCategories(data.data);
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -67,7 +80,8 @@ const AddProductForm = (props: Props) => {
 
   useEffect(() => {
     fetchBrands();
-  }, [fetchBrands]);
+    fetchCategories();
+  }, [fetchBrands, fetchCategories]);
 
   return (
     <form>
@@ -80,7 +94,7 @@ const AddProductForm = (props: Props) => {
           <Grid item xs={2}>
             {titleRowForm.map((title, i) => {
               return (
-                <Box key={i} sx={{ display: 'flex', padding: '1vh 0' }}>
+                <Box key={i} sx={{ display: 'flex', paddingTop: title.paddingValue }}>
                   <Typography variant="subtitle1" gutterBottom component="div" sx={{ color: '#fff' }}>
                     {title.title}
                   </Typography>
@@ -90,31 +104,21 @@ const AddProductForm = (props: Props) => {
             })}
           </Grid>
 
-          <Grid item xs={4}>
+          <Grid item xs={6}>
             <Controller
               render={({ field }) => (
                 <Input
                   {...field}
-                  id="outlined-basic"
+                  id="vendor"
                   color="secondary"
                   placeholder="Type Vendor to select"
                   className="vendor"
                   value={formValues.vendor}
-                  sx={{
-                    backgroundColor: '#252547',
-                    color: '#fff',
-                    padding: '0 16px',
-                    border: '1px solid #b18aff',
-                    width: '100%',
-                    height: '40px',
-                    '&: hover': {
-                      backgroundColor: '#1b1b38',
-                    },
-                  }}
+                  sx={baseInputStyle}
                   {...register('vendor', {
                     required: true,
                   })}
-                  // onChange={(e) => setFormValues({ ...formValues, vendor: e.target.value })}
+                  onChange={(e) => setFormValues({ ...formValues, vendor: e.target.value })}
                 />
               )}
               name="vendor"
@@ -125,6 +129,7 @@ const AddProductForm = (props: Props) => {
                 <FormattedMessage id="fieldRequire" />
               </p>
             )}
+
             <Controller
               render={({ field }) => (
                 <Input
@@ -132,84 +137,177 @@ const AddProductForm = (props: Props) => {
                   id="outlined-basic"
                   color="secondary"
                   className="productTitle"
-                  value={formValues.vendor}
-                  sx={{
-                    backgroundColor: '#252547',
-                    color: '#fff',
-                    marginTop: '2vh',
-                    padding: '0 16px',
-                    border: '1px solid #b18aff',
-                    width: '100%',
-                    height: '40px',
-                    '&: hover': {
-                      backgroundColor: '#1b1b38',
+                  value={formValues.productTitle}
+                  sx={[
+                    baseInputStyle,
+                    {
+                      marginTop: '2vh',
                     },
-                  }}
+                  ]}
                   {...register('productTitle', {
                     required: true,
                     pattern: validEmailRegex,
                   })}
-                  // onChange={(e) => setFormValues({ ...formValues, productTitle: e.target.value })}
+                  onChange={(e) => setFormValues({ ...formValues, productTitle: e.target.value })}
                 />
               )}
               name="productTitle"
               control={control}
             />
+
+            <Controller
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  labelId="brand-select-label"
+                  id="brand-select"
+                  color="secondary"
+                  value={formValues.brand}
+                  sx={[
+                    baseInputStyle,
+                    {
+                      marginTop: '2vh',
+                    },
+                  ]}
+                  onChange={(e) => setFormValues({ ...formValues, brand: e.target.value })}
+                >
+                  {brands?.map((b) => {
+                    return (
+                      <MenuItem key={b.id} value={b.name}>
+                        {b.name}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              )}
+              name="brand"
+              control={control}
+            />
+
+            <Controller
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  labelId="condition-select-label"
+                  id="condition-select"
+                  color="secondary"
+                  value={formValues.condition}
+                  sx={[
+                    baseInputStyle,
+                    {
+                      marginTop: '2vh',
+                    },
+                  ]}
+                  onChange={(e) => setFormValues({ ...formValues, condition: e.target.value })}
+                >
+                  <MenuItem value={formValues.condition}>Used</MenuItem>
+                </Select>
+              )}
+              name="brand"
+              control={control}
+            />
+
             <Controller
               render={({ field }) => (
                 <Input
                   {...field}
-                  id="outlined-basic"
+                  id="sku"
                   color="secondary"
-                  className="productTitle"
-                  value={formValues.vendor}
-                  sx={{
-                    backgroundColor: '#252547',
-                    color: '#fff',
-                    marginTop: '2vh',
-                    padding: '0 16px',
-                    border: '1px solid #b18aff',
-                    width: '100%',
-                    height: '40px',
-                    '&: hover': {
-                      backgroundColor: '#1b1b38',
+                  sx={[
+                    baseInputStyle,
+                    {
+                      marginTop: '2vh',
                     },
-                  }}
-                  {...register('productTitle', {
-                    required: true,
-                    pattern: validEmailRegex,
-                  })}
-                  // onChange={(e) => setFormValues({ ...formValues, productTitle: e.target.value })}
+                  ]}
+                  className="sku"
+                  value={formValues.vendor}
+                  onChange={(e) => setFormValues({ ...formValues, vendor: e.target.value })}
                 />
               )}
-              name="productTitle"
+              name="vendor"
+              control={control}
+            />
+
+            <Button
+              variant="outlined"
+              component="label"
+              size="large"
+              sx={{ marginTop: '2vh', color: '#fff', width: '12vw', height: '12vh' }}
+            >
+              <CameraAltRoundedIcon fontSize="large" />
+              <input type="file" accept="image/*" hidden />
+            </Button>
+
+            <Controller
+              render={({ field }) => (
+                <Select
+                  {...field}
+                  labelId="category-select-label"
+                  id="category-select"
+                  color="secondary"
+                  value={formValues.category}
+                  sx={[
+                    baseInputStyle,
+                    {
+                      marginTop: '2vh',
+                    },
+                  ]}
+                  onChange={(e) => setFormValues({ ...formValues, category: e.target.value })}
+                >
+                  {categories?.map((c) => {
+                    return (
+                      <MenuItem key={c.id} value={c.name}>
+                        {c.name}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              )}
+              name="brand"
+              control={control}
+            />
+
+            <Controller
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  id="description"
+                  className="description"
+                  value={formValues.description}
+                  sx={{
+                    marginTop: '2vh',
+                    width: '100%',
+                    border: '0.1px solid #1976d2',
+                    borderRadius: '3px',
+                  }}
+                  placeholder="Enter text here..."
+                  multiline
+                  rows={8}
+                  onChange={(e) => setFormValues({ ...formValues, description: e.target.value })}
+                />
+              )}
+              name="description"
+              control={control}
+            />
+
+            <Controller
+              render={({ field }) => (
+                <Switch
+                  {...field}
+                  defaultChecked
+                  id="sale"
+                  className="sale"
+                  value={formValues.sale}
+                  sx={{ marginTop: '2vh' }}
+                  // onChange={(e) => setFormValues({ ...formValues, sale: e.target.value })}
+                />
+              )}
+              name="sale"
               control={control}
             />
           </Grid>
         </Grid>
       </Box>
-      {/* 
-      <Box sx={{ backgroundColor: '#1b1b38', marginTop: '2vh', padding: '2vh 5vh' }}>
-        <Typography variant="h4" gutterBottom component="div" sx={{ color: '#fff' }}>
-          Price &#38; Inventory
-        </Typography>
-      </Box>
-      <Box sx={{ backgroundColor: '#1b1b38', marginTop: '2vh', padding: '2vh 5vh' }}>
-        <Typography variant="h4" gutterBottom component="div" sx={{ color: '#fff' }}>
-          Price &#38; Inventory
-        </Typography>
-      </Box>
-      <Box sx={{ backgroundColor: '#1b1b38', marginTop: '2vh', padding: '2vh 5vh' }}>
-        <Typography variant="h4" gutterBottom component="div" sx={{ color: '#fff' }}>
-          Shipping
-        </Typography>
-      </Box>
-      <Box sx={{ backgroundColor: '#1b1b38', marginTop: '2vh', padding: '2vh 5vh' }}>
-        <Typography variant="h4" gutterBottom component="div" sx={{ color: '#fff' }}>
-          Marketing
-        </Typography>
-      </Box> 
-      */}
     </form>
   );
 };

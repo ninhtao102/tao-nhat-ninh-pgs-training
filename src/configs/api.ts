@@ -1,4 +1,6 @@
 import { APIHost } from '../utils/constants';
+import Cookies from 'js-cookie';
+import { ACCESS_TOKEN_KEY } from '../../src/utils/constants';
 
 enum APIService {
   auth,
@@ -17,10 +19,18 @@ function getBaseUrl(service: APIService) {
 
 export const API_PATHS = {
   signIn: `${getBaseUrl(APIService.public)}/authentication/login`,
-  productList: `${getBaseUrl(APIService.public)}/products/list`,
-  categoryList: `${getBaseUrl(APIService.public)}/categories/list`,
+  products: `${getBaseUrl(APIService.public)}/products/list`,
+  categories: `${getBaseUrl(APIService.public)}/categories/list`,
   brands: `${getBaseUrl(APIService.auth)}/brands/list`,
   users: `${getBaseUrl(APIService.auth)}/users/list`,
   role: `${getBaseUrl(APIService.auth)}/commons/role`,
   country: `${getBaseUrl(APIService.auth)}/commons/country`,
+  shipping: `${getBaseUrl(APIService.auth)}/shipping/list`,
+};
+
+export const API_HEADER = {
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: Cookies.get(ACCESS_TOKEN_KEY) || '',
+  },
 };

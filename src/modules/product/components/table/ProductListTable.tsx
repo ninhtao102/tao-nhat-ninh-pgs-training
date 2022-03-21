@@ -16,9 +16,9 @@ import {
 } from '@mui/material';
 import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
-import { API_PATHS } from '../../../configs/api';
-import { IProductItem } from '../../../models/product';
-import ModalUpdate from './table/ModalUpdate';
+import { API_PATHS } from '../../../../configs/api';
+import { IProductItem } from '../../../../models/product';
+import ModalUpdate from '../table/ModalUpdate';
 
 interface Props {}
 
@@ -53,7 +53,7 @@ const ProductListTable = (props: Props) => {
   };
 
   const fetchData = useCallback(() => {
-    fetch(API_PATHS.productList)
+    fetch(API_PATHS.products)
       .then((response) => response.json())
       .then((data) => {
         setRows(data.data);

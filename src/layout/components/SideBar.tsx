@@ -2,8 +2,9 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
-import { Collapse, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Link } from '@mui/material';
-import React from 'react';
+import { Collapse, Drawer, Link, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 
 interface Props {
   sideBarOpen: boolean;
@@ -12,8 +13,12 @@ interface Props {
 
 const SideBar = (props: Props) => {
   const drawerWidth = props.sideBarOpen ? '16vw' : 0;
-  const [openCatalog, setOpenCatalog] = React.useState(true);
-  const [openUsers, setOpenUsers] = React.useState(true);
+  const [openCatalog, setOpenCatalog] = useState(true);
+  const [openUsers, setOpenUsers] = useState(true);
+  const [productNav, setproductNav] = useState('#fff');
+  const [userNav, setuserNav] = useState('#fff');
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   const handleClickCatalog = () => {
     setOpenCatalog(!openCatalog);
@@ -21,6 +26,26 @@ const SideBar = (props: Props) => {
   const handleClickUsers = () => {
     setOpenUsers(!openUsers);
   };
+
+  useEffect(() => {
+    switch (currentPath) {
+      case '/products/manage-product':
+        setproductNav('#6f53b4');
+        break;
+      case '/products/new-product':
+        setproductNav('#6f53b4');
+        break;
+      case '/user/manage-user':
+        setuserNav('#6f53b4');
+        break;
+      case '/user/new-user':
+        setuserNav('#6f53b4');
+        break;
+      default:
+        setproductNav('#fff');
+    }
+  }, [document.onload]);
+
   return (
     <div style={{ backgroundColor: '#323259', marginTop: '64px', zIndex: 1, boxShadow: '1px 1px 8px black' }}>
       <Drawer
@@ -60,7 +85,9 @@ const SideBar = (props: Props) => {
                   id="productListLink"
                   href="http://localhost:3000/products/manage-product"
                   underline="none"
-                  sx={{ color: '#fff' }}
+                  sx={{
+                    color: productNav,
+                  }}
                 >
                   <ListItemText primary="Products" />
                 </Link>
@@ -84,9 +111,9 @@ const SideBar = (props: Props) => {
                   id="userListLink"
                   href="http://localhost:3000/user/manage-user"
                   underline="none"
-                  sx={{ color: '#fff' }}
+                  sx={{ color: userNav }}
                 >
-                  <ListItemText primary="Users list" />
+                  <ListItemText primary="Users" />
                 </Link>
               </ListItemButton>
             </List>

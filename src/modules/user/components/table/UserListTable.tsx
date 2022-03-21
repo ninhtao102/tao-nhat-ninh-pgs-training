@@ -11,12 +11,10 @@ import {
   TablePagination,
   TableRow,
 } from '@mui/material';
-import Cookies from 'js-cookie';
 import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
-import { API_PATHS } from '../../../../configs/api';
+import { API_HEADER, API_PATHS } from '../../../../configs/api';
 import { IUserItem } from '../../../../models/user';
-import { ACCESS_TOKEN_KEY } from '../../../../utils/constants';
 
 const columns = [
   { field: 'id', headerName: 'Login/Email' },
@@ -47,12 +45,7 @@ const UserListTable = (props: Props) => {
   };
 
   const fetchData = useCallback(() => {
-    fetch(API_PATHS.users, {
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: Cookies.get(ACCESS_TOKEN_KEY) || '',
-      },
-    })
+    fetch(API_PATHS.users, API_HEADER)
       .then((response) => response.json())
       .then((data) => {
         setRows(data.data);

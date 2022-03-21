@@ -6,11 +6,6 @@ export interface IProductFilter {
   vendor: string;
 }
 
-export interface ICategories {
-  id: string;
-  name: string;
-}
-
 export interface IUserFilter {
   keywords: string;
   membership: string;

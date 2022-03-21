@@ -2,6 +2,9 @@ import KeyboardBackspaceRoundedIcon from '@mui/icons-material/KeyboardBackspaceR
 import { Button, Link, Box } from '@mui/material';
 import React from 'react';
 import AddProductForm from '../components/form/AddProductForm';
+import PriceInventoryForm from '../components/form/PriceForm';
+import ShippingForm from '../components/form/ShippingForm';
+import Marketing from '../components/form/Marketing';
 
 interface Props {}
 
@@ -30,6 +33,9 @@ const AddProductPage = (props: Props) => {
         </Link>
       </Box>
       <AddProductForm />
+      <PriceInventoryForm />
+      <ShippingForm />
+      <Marketing />
     </div>
   );
 };

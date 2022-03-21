@@ -18,7 +18,8 @@ import {
 import React, { useCallback, useEffect, useState } from 'react';
 import { API_PATHS } from '../../../../configs/api';
 import { Controller, useForm } from 'react-hook-form';
-import { IProductFilter, ICategories } from '../../../../models/filter';
+import { IProductFilter } from '../../../../models/filter';
+import { ICategories } from '../../../../models/utils';
 
 interface Props {}
 
@@ -47,7 +48,7 @@ const ProductFilter = (props: Props) => {
   };
 
   const fetchData = useCallback(() => {
-    fetch(API_PATHS.categoryList)
+    fetch(API_PATHS.categories)
       .then((response) => response.json())
       .then((data) => {
         console.log('category:', data);
