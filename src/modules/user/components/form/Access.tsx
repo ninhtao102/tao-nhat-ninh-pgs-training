@@ -1,6 +1,7 @@
-import { Box, Checkbox, Grid, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Checkbox, Grid, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { FormattedMessage } from 'react-intl';
 import { IAccess } from '../../../../models/form';
 import { baseInputStyle } from '../../pages/AddUserPage';
 
@@ -16,7 +17,7 @@ const Access = (props: Props) => {
   const [formValues, setFormValues] = useState<IAccess>({
     accessLevel: '',
     memberShip: '',
-    require: '',
+    require: false,
   });
 
   const {
@@ -28,7 +29,7 @@ const Access = (props: Props) => {
 
   return (
     <form>
-      <Box sx={{ backgroundColor: '#1b1b38', marginTop: '2vh', padding: '2vh 5vh' }}>
+      <Box sx={{ backgroundColor: '#1b1b38', marginTop: '2vh', padding: '5vh' }}>
         <Typography variant="h6" gutterBottom component="div" sx={{ color: '#fff' }}>
           Access information
         </Typography>
@@ -37,7 +38,7 @@ const Access = (props: Props) => {
           <Grid item xs={2}>
             {titleRowForm.map((title, i) => {
               return (
-                <Box key={i} sx={{ display: 'flex', paddingTop: '2.8vh' }}>
+                <Box key={i} sx={{ display: 'flex', paddingTop: '2vh' }}>
                   <Typography variant="subtitle1" gutterBottom component="div" sx={{ color: '#fff', textAlign: 'end' }}>
                     {title.title}
                   </Typography>
@@ -48,55 +49,70 @@ const Access = (props: Props) => {
           </Grid>
 
           <Grid item xs={4}>
-            <Controller
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  labelId="access-level-select-label"
-                  id="access-level-select"
-                  color="secondary"
-                  value={formValues.accessLevel}
-                  sx={[baseInputStyle, { marginTop: '2vh' }]}
-                  onChange={(e) => setFormValues({ ...formValues, accessLevel: e.target.value })}
-                >
-                  <MenuItem value={formValues.accessLevel}>Vendor</MenuItem>
-                  <MenuItem value={formValues.accessLevel}>Admin</MenuItem>
-                </Select>
+            <Box sx={{ display: 'flex' }}>
+              <Controller
+                control={control}
+                name="accessLevel"
+                render={({ field }) => (
+                  <select
+                    {...field}
+                    {...register('accessLevel', {
+                      required: true,
+                    })}
+                    defaultValue={'Vendor'}
+                    style={baseInputStyle}
+                  >
+                    <option value="Admin" style={baseInputStyle}>
+                      Admin
+                    </option>
+                    <option value="Vendor" style={baseInputStyle}>
+                      Vendor
+                    </option>
+                  </select>
+                )}
+              />
+              {errors?.accessLevel?.type === 'required' && (
+                <p className="valid-field--message" style={{ padding: '1vh 0' }}>
+                  <FormattedMessage id="accessLevelRequire" />
+                </p>
               )}
-              name="accessLevel"
-              control={control}
-            />
+            </Box>
+
+            <Box sx={{ display: 'flex', marginTop: '2vh' }}>
+              <Controller
+                control={control}
+                name="memberShip"
+                render={({ field }) => (
+                  <select
+                    {...field}
+                    {...register('memberShip', {
+                      required: false,
+                    })}
+                    defaultValue={'Ignore Membership'}
+                    style={baseInputStyle}
+                  >
+                    <option value="Ignore Membership" style={baseInputStyle}>
+                      Ignore Membership
+                    </option>
+                    <option value="General" style={baseInputStyle}>
+                      General
+                    </option>
+                  </select>
+                )}
+              />
+            </Box>
 
             <Controller
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  labelId="access-level-select-label"
-                  id="access-level-select"
-                  color="secondary"
-                  value={formValues.accessLevel}
-                  sx={[baseInputStyle, { marginTop: '2vh' }]}
-                  onChange={(e) => setFormValues({ ...formValues, accessLevel: e.target.value })}
-                >
-                  <MenuItem value={formValues.accessLevel}>Ignore Membership</MenuItem>
-                  <MenuItem value={formValues.accessLevel}>General</MenuItem>
-                </Select>
-              )}
-              name="accessLevel"
               control={control}
-            />
-
-            <Controller
+              name="require"
               render={({ field }) => (
                 <Checkbox
                   {...field}
                   id="require-checkbox"
                   sx={{ color: '#fff', margin: '2vh 0' }}
-                  //   onChange={(e) => setFormValues({ ...formValues, require: e.target.checked })}
+                  onChange={(e) => setFormValues({ ...formValues, require: e.target.checked })}
                 />
               )}
-              name="accessLevel"
-              control={control}
             />
           </Grid>
         </Grid>

@@ -2,21 +2,14 @@ import { Box, Grid, InputAdornment, MenuItem, Select, TextField, Typography } fr
 import React, { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { API_HEADER, API_PATHS } from '../../../../configs/api';
-import { IShipping, IZone } from '../../../../models/form';
-
-const baseInputStyle = {
-  backgroundColor: '#252547',
-  border: '0.1px solid #111',
-  borderRadius: '2px',
-  '&: hover': {
-    backgroundColor: '#1b1b38',
-  },
-};
+import { IShipping } from '../../../../models/form';
+import { baseInputStyle } from '../../pages/AddProductPage';
+import { IShippingParams } from '../../../../models/utils';
 
 interface Props {}
 
 const ShippingForm = (props: Props) => {
-  const [zone, setZone] = useState<IZone[]>();
+  const [zones, setZones] = useState<IShippingParams[]>();
   const [formValues, setFormValues] = useState<IShipping>({
     continental: '',
     zone: '',
@@ -33,7 +26,7 @@ const ShippingForm = (props: Props) => {
     fetch(API_PATHS.shipping, API_HEADER)
       .then((response) => response.json())
       .then((data) => {
-        setZone(data.data);
+        setZones(data.data);
       })
       .catch((error) => {
         console.error('Error:', error);
@@ -61,7 +54,7 @@ const ShippingForm = (props: Props) => {
             </Box>
           </Grid>
 
-          <Grid item xs={6}>
+          <Grid item xs={8}>
             <Controller
               render={({ field }) => (
                 <TextField
@@ -85,29 +78,26 @@ const ShippingForm = (props: Props) => {
               control={control}
             />
 
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '80%', marginTop: '2vh' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '70%', marginTop: '2vh' }}>
               <Controller
+                control={control}
+                name="zone"
                 render={({ field }) => (
-                  <Select
+                  <select
                     {...field}
-                    labelId="zone-select-label"
-                    id="zone-select"
-                    color="secondary"
-                    value={formValues.zone}
-                    sx={[baseInputStyle, { width: '60%', height: '40px' }]}
+                    defaultValue={undefined}
+                    style={baseInputStyle}
                     onChange={(e) => setFormValues({ ...formValues, zone: e.target.value })}
                   >
-                    {zone?.map((z) => {
+                    {zones?.map((zone) => {
                       return (
-                        <MenuItem key={z.id} value={formValues.zone}>
-                          {z.name}
-                        </MenuItem>
+                        <option key={zone.id} value={zone.id} style={baseInputStyle}>
+                          {zone.name}
+                        </option>
                       );
                     })}
-                  </Select>
+                  </select>
                 )}
-                name="zone"
-                control={control}
               />
               <Typography
                 variant="subtitle1"

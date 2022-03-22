@@ -1,3 +1,4 @@
+import { IShippingParams } from './utils';
 export interface IProductFilter {
   keywords: string;
   categories: string;
@@ -11,31 +12,29 @@ export interface IUserFilter {
   membership: string;
   userTypes: string;
   status: string;
-  country: string;
-  state: string;
-  address: string;
-  phone: string;
+  address: IAddress[];
   userActivity: string;
   dateRange: string;
 }
 
 export interface IUserRole {
-  administrator: {
-    id: string;
-    enabled: string;
-    name: string;
-  };
-  customer: {
-    id: string;
-    name: string;
-  };
+  id: string;
+  name: string;
+  // administrator: {
+  //   id: string;
+  //   enabled: string;
+  //   name: string;
+  // };
+  // customer: {
+  //   id: string;
+  //   name: string;
+  // };
 }
 
-export interface ICountry {
-  code: string;
-  code3: string;
-  country: string;
-  currency_id: string;
-  enabled: string;
-  id: string;
+export interface IAddress {
+  // country: '' | IShippingParams[];
+  country: any;
+  state: string;
+  address: string;
+  phone: string;
 }

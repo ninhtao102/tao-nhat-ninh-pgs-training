@@ -10,11 +10,21 @@ export const baseInputStyle = {
   color: '#fff',
   padding: '0 16px',
   border: '0.1px solid #111',
-  width: '100%',
+  width: '70%',
   height: '40px',
   '&: hover': {
     backgroundColor: '#1b1b38',
   },
+};
+
+export const selectBaseStyles = {
+  backgroundColor: '#252547',
+  color: '#fff',
+  width: '100%',
+  height: '40px',
+  padding: '0 12px',
+  border: '1px solid #000',
+  borderRadius: '5px',
 };
 
 interface Props {}

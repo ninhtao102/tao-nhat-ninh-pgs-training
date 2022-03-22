@@ -56,3 +56,9 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #b18aff;
 }
+
+.valid-field--message {
+  color: red;
+  font-size: 12px;
+  padding: 0 1vh;
+}

@@ -10,6 +10,9 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  TableSortLabel,
+  Typography,
+  Box,
 } from '@mui/material';
 import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -17,15 +20,15 @@ import { API_HEADER, API_PATHS } from '../../../../configs/api';
 import { IUserItem } from '../../../../models/user';
 
 const columns = [
-  { field: 'id', headerName: 'Login/Email' },
-  { field: 'id', headerName: 'Name' },
-  { field: 'id', headerName: 'Access level' },
-  { field: 'id', headerName: 'Products' },
-  { field: 'id', headerName: 'Orders' },
-  { field: 'id', headerName: 'Wishlist' },
-  { field: 'id', headerName: 'Created' },
-  { field: 'id', headerName: 'Last Login' },
-  { field: 'id', headerName: '' },
+  { id: 'login', headerName: 'Login/Email', canSort: true },
+  { id: 'name', headerName: 'Name', canSort: true },
+  { id: 'level', headerName: 'Access level', canSort: false },
+  { id: 'products', headerName: 'Products', canSort: false },
+  { id: 'orders', headerName: 'Orders', canSort: false },
+  { id: 'wishlist', headerName: 'Wishlist', canSort: false },
+  { id: 'created', headerName: 'Created', canSort: false },
+  { id: 'last', headerName: 'Last Login', canSort: false },
+  { id: 'btn', headerName: '', canSort: false },
 ];
 
 interface Props {}
@@ -35,6 +38,10 @@ const UserListTable = (props: Props) => {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [totalItem, setTotalItem] = useState();
+  const [sortInfo, setsortInfo] = useState({
+    order_by: 'name',
+    sort: 'asc',
+  });
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -42,6 +49,11 @@ const UserListTable = (props: Props) => {
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const handleSort = (name: string) => {
+    const isSort = sortInfo.order_by === name && sortInfo.sort === 'desc';
+    setsortInfo({ sort: isSort ? ' asc' : 'desc', order_by: name });
   };
 
   const fetchData = useCallback(() => {
@@ -83,11 +95,49 @@ const UserListTable = (props: Props) => {
                 <TableCell align="left">
                   <Checkbox size="small" sx={{ color: '#fff' }} />
                 </TableCell>
-                {columns.map((col) => (
+
+                {columns.map((col, i) => {
+                  if (col.canSort) {
+                    return (
+                      <TableCell key={i} align="left" sx={{ color: '#fff', fontWeight: 'bold', fontSize: '16px' }}>
+                        {col.headerName}
+                      </TableCell>
+                    );
+                  } else {
+                    return (
+                      <TableCell
+                        key={i}
+                        align="left"
+                        // sortDirection={sort === col.id ? order_by : false}
+                        sx={{ color: '#fff', fontWeight: 'bold', fontSize: '16px' }}
+                      >
+                        <TableSortLabel
+                          // active={sort === col.headerName}
+                          // direction={sort === col.headerName ? order_by : 'asc'}
+                          onClick={() => handleSort(col.headerName)}
+                          sx={{ color: 'white' }}
+                        >
+                          <Typography sx={{ fontSize: '13px' }} noWrap>
+                            {col.headerName}
+                          </Typography>
+                          {/* {sort === col.headerName ? ( */}
+                          <Box
+                            component="span"
+                            // sx={visuallyHidden}
+                          >
+                            {/* {order_by === 'desc' ? 'sorted descending' : 'sorted ascending'} */}
+                          </Box>
+                          {/* ) : null} */}
+                        </TableSortLabel>
+                      </TableCell>
+                    );
+                  }
+                })}
+                {/* {columns.map((col) => (
                   <TableCell key={col.field} align="left" sx={{ color: '#fff', fontWeight: 'bold', fontSize: '16px' }}>
                     {col.headerName}
                   </TableCell>
-                ))}
+                ))} */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -103,7 +153,7 @@ const UserListTable = (props: Props) => {
                     <br />
                     {item?.storeName}
                   </TableCell>
-                  <TableCell align="left">
+                  <TableCell align="left" sx={{ minWidth: '20vh' }}>
                     <Link href="#" underline="hover">
                       {item.fistName} {item.lastName}
                     </Link>
@@ -125,10 +175,10 @@ const UserListTable = (props: Props) => {
                   >
                     {item.wishlist}
                   </TableCell>
-                  <TableCell align="left" sx={{ color: '#fff' }}>
+                  <TableCell align="left" sx={{ color: '#fff', minWidth: '20vh' }}>
                     {moment(+item.created * 1000).format('lll')}
                   </TableCell>
-                  <TableCell align="left" sx={{ color: '#fff' }}>
+                  <TableCell align="left" sx={{ color: '#fff', minWidth: '20vh' }}>
                     {moment(+item.last_login * 1000).format('lll')}
                   </TableCell>
                   <TableCell align="left" sx={{ color: '#fff' }}>

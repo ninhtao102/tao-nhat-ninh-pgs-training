@@ -26,10 +26,10 @@ export interface IProductParams {
   brand: string;
   condition: string;
   sku: string;
-  images: string;
+  images: any;
   category: string;
-  description: string;
-  sale: boolean;
+  description: any;
+  sale: number;
 }
 
 export interface IPriceInventory {

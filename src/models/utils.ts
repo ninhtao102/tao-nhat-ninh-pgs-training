@@ -10,3 +10,8 @@ export interface ICategories {
   path: string;
   pos: string;
 }
+
+export interface IShippingParams {
+  id: string | undefined;
+  name: string;
+}

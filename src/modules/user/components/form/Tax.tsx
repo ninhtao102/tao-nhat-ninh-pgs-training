@@ -19,7 +19,7 @@ const Tax = (props: Props) => {
 
   return (
     <form>
-      <Box sx={{ backgroundColor: '#1b1b38', marginTop: '2vh', padding: '2vh 5vh' }}>
+      <Box sx={{ backgroundColor: '#1b1b38', marginTop: '2vh', padding: '5vh 5vh 10vh 5vh' }}>
         <Typography variant="h6" gutterBottom component="div" sx={{ color: '#fff' }}>
           Access information
         </Typography>

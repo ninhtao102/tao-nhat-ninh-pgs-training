@@ -8,11 +8,6 @@ export interface IPriceInventory {
   quantityInStock: string;
 }
 
-export interface IZone {
-  id: string;
-  name: string;
-}
-
 export interface IShipping {
   continental: string;
   zone: string;
@@ -39,7 +34,7 @@ export interface IAuth {
 export interface IAccess {
   accessLevel: string;
   memberShip: string;
-  require: string;
+  require: boolean;
 }
 
 export interface ITax {

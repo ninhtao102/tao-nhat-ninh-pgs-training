@@ -3,28 +3,27 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import KeyboardDoubleArrowDownRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowDownRounded';
-import {
-  Box,
-  Button,
-  Checkbox,
-  Collapse,
-  FormControlLabel,
-  Grid,
-  Input,
-  MenuItem,
-  Typography,
-  Select,
-} from '@mui/material';
+import { Box, Button, Checkbox, Collapse, FormControlLabel, Grid, Input, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
-import { API_PATHS } from '../../../../configs/api';
 import { Controller, useForm } from 'react-hook-form';
+import { API_PATHS } from '../../../../configs/api';
 import { IProductFilter } from '../../../../models/filter';
 import { ICategories } from '../../../../models/utils';
+import { selectBaseStyles } from '../../pages/AddProductPage';
 
 interface Props {}
 
-const stockStatus = ['In stock', 'Low stock', 'SOLD'];
-const availability = ['Only enabled', 'Only disabled'];
+const stockStatus = [
+  { id: '0', name: 'Any stock status' },
+  { id: '1', name: 'In stock' },
+  { id: '2', name: 'Low stock' },
+  { id: '3', name: 'SOLD' },
+];
+const availability = [
+  { id: '0', name: 'Any availability status' },
+  { id: '1', name: 'Only enabled' },
+  { id: '2', name: 'Only disabled' },
+];
 
 const ProductFilter = (props: Props) => {
   const [categoriesSelector, setCategoriesSelector] = useState<ICategories[]>();
@@ -38,9 +37,9 @@ const ProductFilter = (props: Props) => {
   const [open, setOpen] = useState(false);
   const {
     control,
-    register,
+    // register,
     handleSubmit,
-    formState: { errors },
+    // formState: { errors },
   } = useForm<IProductFilter>();
 
   const handleOpen = () => {
@@ -51,7 +50,7 @@ const ProductFilter = (props: Props) => {
     fetch(API_PATHS.categories)
       .then((response) => response.json())
       .then((data) => {
-        console.log('category:', data);
+        // console.log('categories:', data);
         setCategoriesSelector(data.data);
       })
       .catch((error) => {
@@ -74,80 +73,74 @@ const ProductFilter = (props: Props) => {
             <Grid container spacing={2}>
               <Grid item xs={5}>
                 <Controller
+                  control={control}
+                  name="keywords"
                   render={({ field }) => (
                     <Input
                       {...field}
                       id="outlined-basic"
                       color="secondary"
-                      className="keywords"
+                      placeholder="Search keywords"
                       value={filterValues.keywords}
-                      sx={{
-                        backgroundColor: '#252547',
-                        color: '#fff',
-                        padding: '0 16px',
-                        border: '1px solid #b18aff',
-                        width: '100%',
-                        height: '40px',
-                        '&: hover': {
-                          backgroundColor: '#1b1b38',
+                      sx={[
+                        {
+                          '&: hover': {
+                            backgroundColor: '#1b1b38',
+                          },
                         },
-                      }}
-                      // onChange={(e) => setFilterValues({ ...filterValues, keywords: e.target.value })}
+                        selectBaseStyles,
+                      ]}
+                      onChange={(e) => setFilterValues({ ...filterValues, keywords: e.target.value })}
                     />
                   )}
-                  name="keywords"
-                  control={control}
                 />
               </Grid>
               <Grid item xs={3}>
-                <Select
-                  color="secondary"
-                  // onChange={(e) => {setCategoriesSelector(e.target.value)}}
-                  sx={{
-                    backgroundColor: '#252547',
-                    color: '#fff',
-                    width: '100%',
-                    height: '40px',
-                    '&: hover': {
-                      backgroundColor: '#1b1b38',
-                    },
-                  }}
-                  value={categoriesSelector}
-                >
-                  {(categoriesSelector || []).map((item) => {
-                    return (
-                      <MenuItem key={item.id} value={categoriesSelector?.length}>
-                        {item.name}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
+                <Controller
+                  control={control}
+                  name="categories"
+                  render={({ field }) => (
+                    <select
+                      {...field}
+                      defaultValue={0}
+                      style={selectBaseStyles}
+                      onChange={(e) => setFilterValues({ ...filterValues, categories: e.target.value })}
+                    >
+                      <option value={0} selected>
+                        Any category
+                      </option>
+                      {categoriesSelector?.map((cate) => {
+                        return (
+                          <option key={cate.id} value={cate.id}>
+                            {cate.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  )}
+                />
               </Grid>
               <Grid item xs={3}>
-                <Select
-                  labelId="stock-status-select-label"
-                  id="stock-status-select"
-                  color="secondary"
-                  sx={{
-                    backgroundColor: '#252547',
-                    color: '#fff',
-                    width: '100%',
-                    height: '40px',
-                    '&: hover': {
-                      backgroundColor: '#1b1b38',
-                    },
-                  }}
-                  //   value={stockStatus}
-                  //   onChange={handleChange}
-                >
-                  {stockStatus.map((item, i) => {
-                    return (
-                      <MenuItem key={i} value={item}>
-                        {item}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
+                <Controller
+                  control={control}
+                  name="stockStatus"
+                  render={({ field }) => (
+                    <select
+                      {...field}
+                      defaultValue={0}
+                      style={selectBaseStyles}
+                      onChange={(e) => setFilterValues({ ...filterValues, stockStatus: e.target.value })}
+                    >
+                      {stockStatus.map((sst) => {
+                        return (
+                          <option key={sst.id} value={sst.id}>
+                            {sst.name}
+                          </option>
+                        );
+                      })}
+                    </select>
+                  )}
+                />
               </Grid>
               <Grid item xs={1}>
                 <Button
@@ -208,35 +201,31 @@ const ProductFilter = (props: Props) => {
                     variant="subtitle1"
                     gutterBottom
                     component="div"
-                    sx={{ color: '#fff', alignSelf: 'center', marginLeft: '16px' }}
+                    sx={{ color: '#fff', alignSelf: 'center', margin: '0 16px' }}
                   >
                     Availability
                   </Typography>
-                  <Select
-                    labelId="availability-select-label"
-                    id="availability-select"
-                    color="secondary"
-                    sx={{
-                      backgroundColor: '#252547',
-                      margin: '0 16px',
-                      color: '#fff',
-                      width: '100%',
-                      height: '40px',
-                      '&: hover': {
-                        backgroundColor: '#1b1b38',
-                      },
-                    }}
-                    //   value={category}
-                    //   onChange={handleChange}
-                  >
-                    {availability.map((item, i) => {
-                      return (
-                        <MenuItem key={i} value={item}>
-                          {item}
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
+
+                  <Controller
+                    control={control}
+                    name="availability"
+                    render={({ field }) => (
+                      <select
+                        {...field}
+                        defaultValue={0}
+                        style={selectBaseStyles}
+                        onChange={(e) => setFilterValues({ ...filterValues, availability: e.target.value })}
+                      >
+                        {availability.map((avai) => {
+                          return (
+                            <option key={avai.id} value={avai.id}>
+                              {avai.name}
+                            </option>
+                          );
+                        })}
+                      </select>
+                    )}
+                  />
                 </Box>
               </Grid>
               <Grid item xs={4}>
@@ -245,25 +234,20 @@ const ProductFilter = (props: Props) => {
                     variant="subtitle1"
                     gutterBottom
                     component="div"
-                    sx={{ color: '#fff', alignSelf: 'center', marginLeft: '16px' }}
+                    sx={{ color: '#fff', alignSelf: 'center', margin: '0 16px' }}
                   >
                     Vendor
                   </Typography>
                   <Input
                     color="secondary"
-                    sx={{
-                      backgroundColor: '#252547',
-                      color: '#fff',
-                      margin: '0 16px',
-                      padding: '0 16px',
-                      border: '1px solid #b18aff',
-                      borderRadius: '5px',
-                      width: '100%',
-                      height: '40px',
-                      '&: hover': {
-                        backgroundColor: '#1b1b38',
+                    sx={[
+                      {
+                        '&: hover': {
+                          backgroundColor: '#1b1b38',
+                        },
                       },
-                    }}
+                      selectBaseStyles,
+                    ]}
                   />
                 </Box>
               </Grid>

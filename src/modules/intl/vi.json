@@ -10,5 +10,18 @@
   "signIn": "Đăng nhập",
   "recommendSignUp": "Bạn chưa có tài khoản?",
   "signUp": "Tạo tài khoản",
-  "fieldRequire": "Không bỏ trống trường này"
+  "fieldRequire": "Không bỏ trống trường này",
+  "firstNameRequire": "Vui lòng nhập họ",
+  "lastNameRequire": "Vui lòng nhập tên",
+  "confirmPasswordRequire": "Vui lòng xác nhận mật khẩu",
+  "matchPasswordInvalid": "Mật khẩu không trùng khớp",
+  "typeRequire": "Vui lòng chọn kiểu tài khoản",
+  "accessLevelRequire": "Vui lòng chọn cấp độ tài khoản",
+  "vendorRequire": "Vui lòng điền tên nhân viên",
+  "titleRequire": "Vui lòng nhập tiêu đề",
+  "brandRequire": "Vui lòng chọn thương hiệu",
+  "categoriesRequire": "Vui lòng chọn danh mục",
+  "conditionRequire": "Vui lòng nhập điều kiện",
+  "imagesRequire": "Vui lòng chọn ảnh mô tả",
+  "quantityInStockRequire": "Vui lòng nhập số lượng hàng tồn kho"
 }

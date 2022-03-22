@@ -1,7 +1,9 @@
-import { Box, Grid, Input, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Grid, Input, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { FormattedMessage } from 'react-intl';
 import { IAuth } from '../../../../models/form';
+import { validEmailRegex } from '../../../../utils';
 import { baseInputStyle } from '../../pages/AddUserPage';
 
 const titleRowForm = [
@@ -31,11 +33,13 @@ const AuthForm = (props: Props) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IAuth>();
+  } = useForm<IAuth>({
+    mode: 'onBlur',
+  });
 
   return (
     <form>
-      <Box>
+      <Box sx={{ paddingBottom: '5vh' }}>
         <Typography variant="h6" gutterBottom component="div" sx={{ color: '#fff' }}>
           Email &amp; password
         </Typography>
@@ -54,105 +58,184 @@ const AuthForm = (props: Props) => {
             })}
           </Grid>
 
-          <Grid item xs={4}>
-            <Controller
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  id="firstName"
-                  color="secondary"
-                  className="firstName"
-                  value={formValues.firstName}
-                  sx={[baseInputStyle, { marginTop: '2vh' }]}
-                  onChange={(e) => setFormValues({ ...formValues, firstName: e.target.value })}
-                />
+          <Grid item xs={6}>
+            <Box sx={{ display: 'flex' }}>
+              <Controller
+                control={control}
+                name="firstName"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="firstName"
+                    color="secondary"
+                    autoComplete="off"
+                    value={formValues.firstName}
+                    sx={[baseInputStyle, { marginTop: '2vh' }]}
+                    {...register('firstName', {
+                      required: true,
+                    })}
+                    onChange={(e) => setFormValues({ ...formValues, firstName: e.target.value })}
+                  />
+                )}
+              />
+              {errors?.firstName?.type === 'required' && (
+                <p className="valid-field--message" style={{ padding: '1vh' }}>
+                  <FormattedMessage id="firstNameRequire" />
+                </p>
               )}
-              name="firstName"
-              control={control}
-            />
+            </Box>
 
-            <Controller
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  id="lastName"
-                  color="secondary"
-                  className="lastName"
-                  value={formValues.lastName}
-                  sx={[baseInputStyle, { marginTop: '2vh' }]}
-                  onChange={(e) => setFormValues({ ...formValues, lastName: e.target.value })}
-                />
+            <Box sx={{ display: 'flex' }}>
+              <Controller
+                control={control}
+                name="lastName"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="lastName"
+                    color="secondary"
+                    autoComplete="off"
+                    value={formValues.lastName}
+                    sx={[baseInputStyle, { marginTop: '2vh' }]}
+                    {...register('lastName', {
+                      required: true,
+                    })}
+                    onChange={(e) => setFormValues({ ...formValues, lastName: e.target.value })}
+                  />
+                )}
+              />
+              {errors?.lastName?.type === 'required' && (
+                <p className="valid-field--message" style={{ padding: '1vh' }}>
+                  <FormattedMessage id="lastNameRequire" />
+                </p>
               )}
-              name="lastName"
-              control={control}
-            />
+            </Box>
 
-            <Controller
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  id="email"
-                  color="secondary"
-                  className="email"
-                  value={formValues.email}
-                  sx={[baseInputStyle, { marginTop: '2vh' }]}
-                  onChange={(e) => setFormValues({ ...formValues, email: e.target.value })}
-                />
+            <Box sx={{ display: 'flex' }}>
+              <Controller
+                control={control}
+                name="email"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="email"
+                    color="secondary"
+                    autoComplete="off"
+                    value={formValues.email}
+                    sx={[baseInputStyle, { marginTop: '2vh' }]}
+                    {...register('email', {
+                      required: true,
+                      pattern: validEmailRegex,
+                    })}
+                    onChange={(e) => setFormValues({ ...formValues, email: e.target.value })}
+                  />
+                )}
+              />
+              {errors?.email?.type === 'required' && (
+                <p className="valid-field--message" style={{ padding: '1vh' }}>
+                  <FormattedMessage id="emailRequire" />
+                </p>
               )}
-              name="email"
-              control={control}
-            />
+              {errors?.email?.type === 'pattern' && (
+                <p className="valid-field--message" style={{ padding: '1vh' }}>
+                  <FormattedMessage id="emailInvalid" />
+                </p>
+              )}
+            </Box>
 
-            <Controller
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  id="password"
-                  color="secondary"
-                  className="password"
-                  value={formValues.password}
-                  sx={[baseInputStyle, { marginTop: '2vh' }]}
-                  onChange={(e) => setFormValues({ ...formValues, password: e.target.value })}
-                />
+            <Box sx={{ display: 'flex' }}>
+              <Controller
+                control={control}
+                name="password"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="password"
+                    color="secondary"
+                    autoComplete="off"
+                    type="password"
+                    value={formValues.password}
+                    sx={[baseInputStyle, { marginTop: '2vh' }]}
+                    {...register('password', {
+                      required: true,
+                      minLength: 6,
+                    })}
+                    onChange={(e) => setFormValues({ ...formValues, password: e.target.value })}
+                  />
+                )}
+              />
+              {errors?.password?.type === 'required' && (
+                <p className="valid-field--message" style={{ padding: '1vh' }}>
+                  <FormattedMessage id="passwordRequire" />
+                </p>
               )}
-              name="password"
-              control={control}
-            />
+              {errors?.password?.type === 'minLength' && (
+                <p className="valid-field--message" style={{ padding: '1vh' }}>
+                  <FormattedMessage id="minPasswordInvalid" />
+                </p>
+              )}
+            </Box>
 
-            <Controller
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  id="confirmPassword"
-                  color="secondary"
-                  className="confirmPassword"
-                  value={formValues.confirmPassword}
-                  sx={[baseInputStyle, { marginTop: '2vh' }]}
-                  onChange={(e) => setFormValues({ ...formValues, confirmPassword: e.target.value })}
-                />
+            <Box sx={{ display: 'flex' }}>
+              <Controller
+                control={control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="confirmPassword"
+                    color="secondary"
+                    autoComplete="off"
+                    type="password"
+                    value={formValues.confirmPassword}
+                    sx={[baseInputStyle, { margin: '2vh 0' }]}
+                    {...register('confirmPassword', {
+                      required: true,
+                    })}
+                    onChange={(e) => setFormValues({ ...formValues, confirmPassword: e.target.value })}
+                  />
+                )}
+              />
+              {errors?.confirmPassword?.type === 'required' && (
+                <p className="valid-field--message" style={{ padding: '1vh' }}>
+                  <FormattedMessage id="confirmPasswordRequire" />
+                </p>
               )}
-              name="confirmPassword"
-              control={control}
-            />
+              {errors?.confirmPassword?.type === 'matchPassword' && (
+                <p className="valid-field--message" style={{ padding: '1vh' }}>
+                  <FormattedMessage id="matchPasswordInvalid" />
+                </p>
+              )}
+            </Box>
 
-            <Controller
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  labelId="type-select-label"
-                  id="type-select"
-                  color="secondary"
-                  value={formValues.type}
-                  sx={[baseInputStyle, { marginTop: '2vh' }]}
-                  onChange={(e) => setFormValues({ ...formValues, type: e.target.value })}
-                >
-                  <MenuItem value={formValues.type}>Individual</MenuItem>
-                  <MenuItem value={formValues.type}>Business</MenuItem>
-                </Select>
+            <Box sx={{ display: 'flex' }}>
+              <Controller
+                control={control}
+                name="type"
+                render={({ field }) => (
+                  <select
+                    {...field}
+                    {...register('type', {
+                      required: true,
+                    })}
+                    defaultValue={'Individual'}
+                    style={baseInputStyle}
+                  >
+                    <option value="Individual" style={baseInputStyle}>
+                      Individual
+                    </option>
+                    <option value="Business" style={baseInputStyle}>
+                      Business
+                    </option>
+                  </select>
+                )}
+              />
+              {errors?.type?.type === 'required' && (
+                <p className="valid-field--message" style={{ padding: '1vh' }}>
+                  <FormattedMessage id="typeRequire" />
+                </p>
               )}
-              name="type"
-              control={control}
-            />
+            </Box>
           </Grid>
         </Grid>
       </Box>

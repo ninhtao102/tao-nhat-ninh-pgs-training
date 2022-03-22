@@ -7,12 +7,7 @@ import React, { useCallback, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { FormattedMessage } from 'react-intl';
 import { validEmailRegex } from '../../../utils';
-
-interface ILoginParams {
-  email: string;
-  password: string;
-  rememberMe: boolean;
-}
+import { ILoginParams } from '../../../models/auth';
 
 interface Props {
   onLogin(value: ILoginParams): void;
@@ -27,7 +22,9 @@ const LoginForm = (props: Props) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<ILoginParams>();
+  } = useForm<ILoginParams>({
+    mode: 'onBlur',
+  });
 
   const onSubmit = useCallback(
     (data: ILoginParams) => {
@@ -60,12 +57,12 @@ const LoginForm = (props: Props) => {
         control={control}
       />
       {errors?.email?.type === 'required' && (
-        <p style={{ color: 'red' }}>
+        <p className="valid-field--message">
           <FormattedMessage id="emailRequire" />
         </p>
       )}
       {errors?.email?.type === 'pattern' && (
-        <p style={{ color: 'red' }}>
+        <p className="valid-field--message">
           <FormattedMessage id="emailInvalid" />
         </p>
       )}
@@ -91,12 +88,12 @@ const LoginForm = (props: Props) => {
         control={control}
       />
       {errors?.password?.type === 'required' && (
-        <p style={{ color: 'red' }}>
+        <p className="valid-field--message">
           <FormattedMessage id="passwordRequire" />
         </p>
       )}
       {errors?.password?.type === 'minLength' && (
-        <p style={{ color: 'red' }}>
+        <p className="valid-field--message">
           <FormattedMessage id="minPasswordInvalid" />
         </p>
       )}

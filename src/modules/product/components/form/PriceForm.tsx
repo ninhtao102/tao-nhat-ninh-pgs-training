@@ -1,7 +1,9 @@
-import { Box, Checkbox, Grid, Input, InputAdornment, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Checkbox, Grid, Input, MenuItem, Select, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { FormattedMessage } from 'react-intl';
 import { IPriceInventory } from '../../../../models/form';
+import { baseInputStyle } from '../../pages/AddProductPage';
 
 const titleRowForm = [
   { title: 'Memberships', require: false },
@@ -10,18 +12,6 @@ const titleRowForm = [
   { title: 'Arrival date', require: false },
   { title: 'Quantity in stock', require: true },
 ];
-
-const baseInputStyle = {
-  backgroundColor: '#252547',
-  color: '#fff',
-  padding: '0 16px',
-  border: '0.1px solid #111',
-  width: '80%',
-  height: '40px',
-  '&: hover': {
-    backgroundColor: '#1b1b38',
-  },
-};
 
 interface Props {}
 
@@ -41,7 +31,9 @@ const PriceInventoryForm = (props: Props) => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<IPriceInventory>();
+  } = useForm<IPriceInventory>({
+    mode: 'onBlur',
+  });
 
   return (
     <form>
@@ -66,14 +58,18 @@ const PriceInventoryForm = (props: Props) => {
 
           <Grid item xs={6}>
             <Controller
+              control={control}
+              name="membership"
               render={({ field }) => (
                 <Select
                   {...field}
                   labelId="membership-select-label"
                   id="membership-select"
                   color="secondary"
+                  // multiple
+                  // renderValue={(selected) => selected.join(', ')}
                   value={formValues.membership}
-                  sx={[baseInputStyle]}
+                  sx={baseInputStyle}
                   onChange={(e) => setFormValues({ ...formValues, membership: e.target.value })}
                 >
                   <MenuItem value={formValues.membership}>
@@ -81,8 +77,6 @@ const PriceInventoryForm = (props: Props) => {
                   </MenuItem>
                 </Select>
               )}
-              name="membership"
-              control={control}
             />
 
             <Box
@@ -103,7 +97,17 @@ const PriceInventoryForm = (props: Props) => {
                 Default
               </Typography>
               <Box sx={{ display: 'inline-flex' }}>
-                <Checkbox sx={{ color: '#fff' }} />
+                <Controller
+                  name="tax"
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      {...field}
+                      sx={{ color: '#fff' }}
+                      onChange={(e) => setFormValues({ ...formValues, tax: e.target.checked })}
+                    />
+                  )}
+                />
                 <Typography
                   variant="subtitle1"
                   gutterBottom
@@ -117,16 +121,14 @@ const PriceInventoryForm = (props: Props) => {
 
             <Box>
               <Controller
+                control={control}
+                name="price"
                 render={({ field }) => (
                   <Input
                     {...field}
                     id="price"
                     color="secondary"
                     placeholder="0.00"
-                    className="price"
-                    inputProps={{
-                      startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                    }}
                     value={formValues.price}
                     sx={[baseInputStyle, { width: '45%' }]}
                     {...register('price', {
@@ -135,8 +137,6 @@ const PriceInventoryForm = (props: Props) => {
                     onChange={(e) => setFormValues({ ...formValues, price: e.target.value })}
                   />
                 )}
-                name="price"
-                control={control}
               />
 
               <Box sx={{ display: 'inline-flex', marginLeft: '3vh' }}>
@@ -153,39 +153,45 @@ const PriceInventoryForm = (props: Props) => {
             </Box>
 
             <Controller
+              control={control}
+              name="arrivalDate"
               render={({ field }) => (
                 <Input
                   {...field}
                   id="arrivalDate"
                   color="secondary"
-                  className="arrivalDate"
                   value={formValues.arrivalDate}
                   sx={[baseInputStyle, { width: '70%', marginTop: '2vh' }]}
                   onChange={(e) => setFormValues({ ...formValues, arrivalDate: e.target.value })}
                 />
               )}
-              name="arrivalDate"
-              control={control}
             />
 
-            <Controller
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  id="quantityInStock"
-                  color="secondary"
-                  className="quantityInStock"
-                  value={formValues.quantityInStock}
-                  sx={[baseInputStyle, { width: '40%', marginTop: '2vh' }]}
-                  {...register('quantityInStock', {
-                    required: true,
-                  })}
-                  onChange={(e) => setFormValues({ ...formValues, quantityInStock: e.target.value })}
-                />
+            <Box sx={{ display: 'flex' }}>
+              <Controller
+                control={control}
+                name="quantityInStock"
+                render={({ field }) => (
+                  <Input
+                    {...field}
+                    id="quantityInStock"
+                    color="secondary"
+                    className="quantityInStock"
+                    value={formValues.quantityInStock}
+                    sx={[baseInputStyle, { width: '40%', marginTop: '2vh' }]}
+                    {...register('quantityInStock', {
+                      required: true,
+                    })}
+                    onChange={(e) => setFormValues({ ...formValues, quantityInStock: e.target.value })}
+                  />
+                )}
+              />
+              {errors?.quantityInStock?.type === 'required' && (
+                <p className="valid-field--message" style={{ padding: '1vh' }}>
+                  <FormattedMessage id="quantityInStockRequire" />
+                </p>
               )}
-              name="quantityInStock"
-              control={control}
-            />
+            </Box>
           </Grid>
         </Grid>
       </Box>
