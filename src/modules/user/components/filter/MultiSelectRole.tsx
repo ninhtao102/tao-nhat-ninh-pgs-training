@@ -28,14 +28,9 @@ const MultiSelectRole = (props: Props) => {
     fetch(API_PATHS.role, API_HEADER)
       .then((response) => response.json())
       .then((data) => {
-        // console.log(data);
         const ad = data.data?.administrator;
         const cus = data.data?.customer;
         const item = ad.concat(cus);
-        console.log('item', item);
-        console.log('administrator', item?.administrator);
-        console.log('customer', item?.customer);
-        console.log('newArr', ad.concat(cus));
 
         setRole(item);
       })

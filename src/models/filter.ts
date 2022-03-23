@@ -12,7 +12,11 @@ export interface IUserFilter {
   membership: string;
   userTypes: string;
   status: string;
-  address: IAddress[];
+  country: any;
+  // country: string;
+  state: string;
+  address: string;
+  phone: string;
   userActivity: string;
   dateRange: string;
 }

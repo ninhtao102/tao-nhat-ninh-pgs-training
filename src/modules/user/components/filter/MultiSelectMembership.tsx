@@ -1,13 +1,8 @@
 import { Box, Checkbox, FormControl, ListItemIcon, ListItemText, MenuItem, Select, Typography } from '@mui/material';
 import React, { useState } from 'react';
+import { options } from '../../constant';
 
 interface Props {}
-
-const options = [
-  //   { id: '0', name: 'All membership' },
-  { id: '1', name: 'Membership' },
-  { id: '2', name: 'Pending membership' },
-];
 
 const MultiSelectMembership = (props: Props) => {
   const [selected, setSelected] = useState([]);

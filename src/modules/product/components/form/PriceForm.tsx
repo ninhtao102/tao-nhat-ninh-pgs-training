@@ -6,33 +6,16 @@ import { IPriceInventory } from '../../../../models/form';
 import { baseInputStyle } from '../../pages/AddProductPage';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-
-const titleRowForm = [
-  { title: 'Memberships', require: false },
-  { title: 'Tax class', require: false },
-  { title: 'Price', require: true },
-  { title: 'Arrival date', require: false },
-  { title: 'Quantity in stock', require: true },
-];
+import { titlePriceForm } from '../../constant';
 
 interface Props {}
 
 const PriceInventoryForm = (props: Props) => {
   const [startDate, setStartDate] = useState(new Date());
-  const [formValues, setFormValues] = useState<IPriceInventory>({
-    membership: '',
-    tax: false,
-    price: '',
-    sale: false,
-    saledPrice: '',
-    arrivalDate: new Date(),
-    quantityInStock: '',
-  });
 
   const {
     control,
     register,
-    handleSubmit,
     formState: { errors },
   } = useForm<IPriceInventory>({
     mode: 'onBlur',
@@ -47,7 +30,7 @@ const PriceInventoryForm = (props: Props) => {
 
         <Grid container spacing={2}>
           <Grid item xs={2}>
-            {titleRowForm.map((title, i) => {
+            {titlePriceForm.map((title, i) => {
               return (
                 <Box key={i} sx={{ display: 'flex', padding: '1.2vh 0' }}>
                   <Typography variant="subtitle1" gutterBottom component="div" sx={{ color: '#fff' }}>
@@ -71,11 +54,11 @@ const PriceInventoryForm = (props: Props) => {
                   color="secondary"
                   // multiple
                   // renderValue={(selected) => selected.join(', ')}
-                  value={formValues.membership}
                   sx={baseInputStyle}
-                  onChange={(e) => setFormValues({ ...formValues, membership: e.target.value })}
                 >
-                  <MenuItem value={formValues.membership}>
+                  <MenuItem
+                  // value={formValues.membership}
+                  >
                     <Checkbox /> General
                   </MenuItem>
                 </Select>
@@ -103,13 +86,7 @@ const PriceInventoryForm = (props: Props) => {
                 <Controller
                   name="tax"
                   control={control}
-                  render={({ field }) => (
-                    <Checkbox
-                      {...field}
-                      sx={{ color: '#fff' }}
-                      onChange={(e) => setFormValues({ ...formValues, tax: e.target.checked })}
-                    />
-                  )}
+                  render={({ field }) => <Checkbox {...field} sx={{ color: '#fff' }} />}
                 />
                 <Typography
                   variant="subtitle1"
@@ -132,12 +109,10 @@ const PriceInventoryForm = (props: Props) => {
                     id="price"
                     color="secondary"
                     placeholder="0.00"
-                    value={formValues.price}
                     sx={[baseInputStyle, { width: '45%' }]}
                     {...register('price', {
                       required: true,
                     })}
-                    onChange={(e) => setFormValues({ ...formValues, price: e.target.value })}
                   />
                 )}
               />
@@ -178,13 +153,10 @@ const PriceInventoryForm = (props: Props) => {
                     {...field}
                     id="quantityInStock"
                     color="secondary"
-                    className="quantityInStock"
-                    value={formValues.quantityInStock}
                     sx={[baseInputStyle, { width: '40%', marginTop: '2vh' }]}
                     {...register('quantityInStock', {
                       required: true,
                     })}
-                    onChange={(e) => setFormValues({ ...formValues, quantityInStock: e.target.value })}
                   />
                 )}
               />

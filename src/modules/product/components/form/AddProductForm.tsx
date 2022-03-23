@@ -8,36 +8,14 @@ import { FormattedMessage } from 'react-intl';
 import { API_HEADER, API_PATHS } from '../../../../configs/api';
 import { IProductParams } from '../../../../models/product';
 import { IBrands, ICategories } from '../../../../models/utils';
+import { titleAddProductForm } from '../../constant';
 import { baseInputStyle } from '../../pages/AddProductPage';
 
 interface Props {}
 
-const titleRowForm = [
-  { title: 'Vendor', require: true, paddingValue: '1vh' },
-  { title: 'Product Title', require: true, paddingValue: '2vh' },
-  { title: 'Brand', require: true, paddingValue: '3vh' },
-  { title: 'Condition', require: true, paddingValue: '3vh' },
-  { title: 'SKU', require: false, paddingValue: '3vh' },
-  { title: 'Images', require: true, paddingValue: '3vh' },
-  { title: 'Category', require: true, paddingValue: '10vh' },
-  { title: 'Description', require: true, paddingValue: '3vh' },
-  { title: 'Available for sale', require: false, paddingValue: '29vh' },
-];
-
 const AddProductForm = (props: Props) => {
   const [brands, setBrands] = useState<IBrands[]>();
   const [categories, setCategories] = useState<ICategories[]>();
-  const [formValues, setFormValues] = useState<IProductParams>({
-    vendor: '',
-    productTitle: '',
-    brand: '',
-    condition: '',
-    sku: '',
-    images: '',
-    category: '',
-    description: '',
-    sale: 0,
-  });
 
   const {
     control,
@@ -84,7 +62,7 @@ const AddProductForm = (props: Props) => {
 
         <Grid container spacing={2}>
           <Grid item xs={2}>
-            {titleRowForm.map((title, i) => {
+            {titleAddProductForm.map((title, i) => {
               return (
                 <Box key={i} sx={{ display: 'flex', paddingTop: title.paddingValue }}>
                   <Typography variant="subtitle1" gutterBottom component="div" sx={{ color: '#fff' }}>
@@ -107,12 +85,10 @@ const AddProductForm = (props: Props) => {
                     id="vendor"
                     color="secondary"
                     placeholder="Type Vendor to select"
-                    value={formValues.vendor}
                     sx={baseInputStyle}
                     {...register('vendor', {
                       required: true,
                     })}
-                    onChange={(e) => setFormValues({ ...formValues, vendor: e.target.value })}
                   />
                 )}
               />
@@ -132,12 +108,10 @@ const AddProductForm = (props: Props) => {
                     {...field}
                     id="productTitle"
                     color="secondary"
-                    value={formValues.productTitle}
                     sx={baseInputStyle}
                     {...register('productTitle', {
                       required: true,
                     })}
-                    onChange={(e) => setFormValues({ ...formValues, productTitle: e.target.value })}
                   />
                 )}
               />
@@ -160,7 +134,6 @@ const AddProductForm = (props: Props) => {
                     })}
                     defaultValue={''}
                     style={baseInputStyle}
-                    onChange={(e) => setFormValues({ ...formValues, brand: e.target.value })}
                   >
                     <option value="" disabled selected hidden>
                       Type Brand name to select
@@ -194,7 +167,6 @@ const AddProductForm = (props: Props) => {
                     })}
                     defaultValue={''}
                     style={baseInputStyle}
-                    onChange={(e) => setFormValues({ ...formValues, condition: e.target.value })}
                   >
                     <option value="" disabled selected hidden></option>
                     <option value="Used" style={baseInputStyle}>
@@ -215,15 +187,7 @@ const AddProductForm = (props: Props) => {
                 control={control}
                 name="sku"
                 defaultValue={Date.now().toString()}
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    id="sku"
-                    color="secondary"
-                    sx={baseInputStyle}
-                    onChange={(e) => setFormValues({ ...formValues, sku: e.target.value })}
-                  />
-                )}
+                render={({ field }) => <Input {...field} id="sku" color="secondary" sx={baseInputStyle} />}
               />
             </Box>
 
@@ -248,7 +212,6 @@ const AddProductForm = (props: Props) => {
                       {...register('images', {
                         required: true,
                       })}
-                      onChange={(e) => setFormValues({ ...formValues, images: e.target.files })}
                     />
                   </Button>
                 )}
@@ -272,7 +235,6 @@ const AddProductForm = (props: Props) => {
                     })}
                     defaultValue={''}
                     style={baseInputStyle}
-                    onChange={(e) => setFormValues({ ...formValues, category: e.target.value })}
                   >
                     <option value="" disabled selected hidden>
                       Type Categories name to select
@@ -320,17 +282,7 @@ const AddProductForm = (props: Props) => {
             <Controller
               control={control}
               name="sale"
-              render={({ field }) => (
-                <Switch
-                  {...field}
-                  defaultChecked
-                  id="sale"
-                  sx={{ marginTop: '2vh' }}
-                  onChange={(e, checked) => {
-                    setFormValues({ ...formValues, sale: checked ? 1 : 0 });
-                  }}
-                />
-              )}
+              render={({ field }) => <Switch {...field} defaultChecked id="sale" sx={{ marginTop: '2vh' }} />}
             />
           </Grid>
         </Grid>

@@ -5,16 +5,7 @@ import { FormattedMessage } from 'react-intl';
 import { IAuth } from '../../../../models/form';
 import { validEmailRegex } from '../../../../utils';
 import { baseInputStyle } from '../../pages/AddUserPage';
-
-const titleRowForm = [
-  { title: 'First Name', require: true },
-  { title: 'Last Name', require: true },
-  { title: 'Email', require: true },
-  { title: 'Password', require: true },
-  { title: 'Confirm password', require: true },
-  { title: 'Type', require: true },
-  { title: 'PaymentRails ID', require: false },
-];
+import { titleAuthForm } from '../../constant';
 
 interface Props {}
 
@@ -46,7 +37,7 @@ const AuthForm = (props: Props) => {
 
         <Grid container spacing={2}>
           <Grid item xs={2}>
-            {titleRowForm.map((title, i) => {
+            {titleAuthForm.map((title, i) => {
               return (
                 <Box key={i} sx={{ display: 'flex', paddingTop: '2.8vh' }}>
                   <Typography variant="subtitle1" gutterBottom component="div" sx={{ color: '#fff', textAlign: 'end' }}>

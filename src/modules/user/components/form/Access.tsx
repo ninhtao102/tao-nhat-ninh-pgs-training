@@ -4,12 +4,7 @@ import { Controller, useForm } from 'react-hook-form';
 import { FormattedMessage } from 'react-intl';
 import { IAccess } from '../../../../models/form';
 import { baseInputStyle } from '../../pages/AddUserPage';
-
-const titleRowForm = [
-  { title: 'Access level', require: true },
-  { title: 'Membership', require: false },
-  { title: 'Require to change password on next log in', require: false },
-];
+import { titleAccessForm } from '../../constant';
 
 interface Props {}
 
@@ -36,7 +31,7 @@ const Access = (props: Props) => {
 
         <Grid container spacing={2}>
           <Grid item xs={2}>
-            {titleRowForm.map((title, i) => {
+            {titleAccessForm.map((title, i) => {
               return (
                 <Box key={i} sx={{ display: 'flex', paddingTop: '2vh' }}>
                   <Typography variant="subtitle1" gutterBottom component="div" sx={{ color: '#fff', textAlign: 'end' }}>

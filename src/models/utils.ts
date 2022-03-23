@@ -15,3 +15,10 @@ export interface IShippingParams {
   id: string | undefined;
   name: string;
 }
+
+export interface ISort {
+  order_by: string;
+  sort: Order;
+}
+
+export type Order = 'asc' | 'desc';

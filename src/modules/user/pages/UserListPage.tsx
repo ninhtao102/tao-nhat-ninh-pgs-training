@@ -1,12 +1,18 @@
 import { Box, Button, Link } from '@mui/material';
 import React from 'react';
+import { Control } from 'react-hook-form';
+import { IUserFilter } from '../../../models/filter';
 import UserFilter from '../components/filter/UserFilter';
 import UserFooter from '../components/table/UserFooter';
 import UserListTable from '../components/table/UserListTable';
 
-interface Props {}
+interface Props {
+  control: Control<IUserFilter, any>;
+}
 
 const UserListPage = (props: Props) => {
+  const { control } = props;
+
   return (
     <>
       <Box
@@ -16,7 +22,7 @@ const UserListPage = (props: Props) => {
           padding: '5vh',
         }}
       >
-        <UserFilter />
+        <UserFilter control={control} />
         <Button
           variant="contained"
           sx={{

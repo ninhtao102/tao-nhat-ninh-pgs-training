@@ -1,24 +1,19 @@
-import { Box, Grid, InputAdornment, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Grid, InputAdornment, TextField, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { API_HEADER, API_PATHS } from '../../../../configs/api';
 import { IShipping } from '../../../../models/form';
-import { baseInputStyle } from '../../pages/AddProductPage';
 import { IShippingParams } from '../../../../models/utils';
+import { baseInputStyle } from '../../pages/AddProductPage';
 
 interface Props {}
 
 const ShippingForm = (props: Props) => {
   const [zones, setZones] = useState<IShippingParams[]>();
-  const [formValues, setFormValues] = useState<IShipping>({
-    continental: '',
-    zone: '',
-  });
 
   const {
     control,
     register,
-    handleSubmit,
     formState: { errors },
   } = useForm<IShipping>();
 
@@ -62,8 +57,6 @@ const ShippingForm = (props: Props) => {
                   id="continental"
                   color="secondary"
                   placeholder="0.00"
-                  className="continental"
-                  value={formValues.continental}
                   sx={[baseInputStyle, { width: '65%' }]}
                   InputProps={{
                     startAdornment: <InputAdornment position="start">$</InputAdornment>,
@@ -71,7 +64,6 @@ const ShippingForm = (props: Props) => {
                   {...register('continental', {
                     required: true,
                   })}
-                  onChange={(e) => setFormValues({ ...formValues, continental: e.target.value })}
                 />
               )}
               name="continental"
@@ -83,12 +75,7 @@ const ShippingForm = (props: Props) => {
                 control={control}
                 name="zone"
                 render={({ field }) => (
-                  <select
-                    {...field}
-                    defaultValue={undefined}
-                    style={baseInputStyle}
-                    onChange={(e) => setFormValues({ ...formValues, zone: e.target.value })}
-                  >
+                  <select {...field} defaultValue={undefined} style={baseInputStyle}>
                     {zones?.map((zone) => {
                       return (
                         <option key={zone.id} value={zone.id} style={baseInputStyle}>

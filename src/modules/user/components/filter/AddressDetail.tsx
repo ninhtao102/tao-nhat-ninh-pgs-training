@@ -1,8 +1,8 @@
 import { Box, Input, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Control, Controller } from 'react-hook-form';
 import { API_HEADER, API_PATHS } from '../../../../configs/api';
-import { IAddress } from '../../../../models/filter';
+import { IUserFilter } from '../../../../models/filter';
 import { IShippingParams } from '../../../../models/utils';
 
 const inputStyles = {
@@ -15,18 +15,13 @@ const inputStyles = {
   borderRadius: '5px',
 };
 
-interface Props {}
+interface Props {
+  control: Control<IUserFilter, any>;
+}
 
 const AddressDetail = (props: Props) => {
+  const { control } = props;
   const [countries, setCountries] = useState<IShippingParams[]>();
-  const [filterValues, setFilterValues] = useState<IAddress>({
-    country: [],
-    state: '',
-    address: '',
-    phone: '',
-  });
-
-  const { control, handleSubmit } = useForm<IAddress>();
 
   const fetchCountry = useCallback(() => {
     fetch(API_PATHS.shipping, API_HEADER)
@@ -57,12 +52,7 @@ const AddressDetail = (props: Props) => {
           control={control}
           name="country"
           render={({ field }) => (
-            <select
-              {...field}
-              defaultValue={''}
-              style={inputStyles}
-              onChange={(e) => setFilterValues({ ...filterValues, country: e.target.value })}
-            >
+            <select {...field} defaultValue={''} style={inputStyles}>
               {countries?.map((country) => {
                 return (
                   <option key={country.id} value={country.id}>
@@ -86,7 +76,6 @@ const AddressDetail = (props: Props) => {
               {...field}
               id="state"
               color="secondary"
-              value={filterValues.state}
               sx={[
                 {
                   '&: hover': {
@@ -95,7 +84,6 @@ const AddressDetail = (props: Props) => {
                 },
                 inputStyles,
               ]}
-              onChange={(e) => setFilterValues({ ...filterValues, state: e.target.value })}
             />
           )}
         />
@@ -112,7 +100,6 @@ const AddressDetail = (props: Props) => {
               {...field}
               id="address"
               color="secondary"
-              value={filterValues.address}
               sx={[
                 {
                   '&: hover': {
@@ -121,7 +108,6 @@ const AddressDetail = (props: Props) => {
                 },
                 inputStyles,
               ]}
-              onChange={(e) => setFilterValues({ ...filterValues, address: e.target.value })}
             />
           )}
         />
@@ -138,7 +124,6 @@ const AddressDetail = (props: Props) => {
               {...field}
               id="phone"
               color="secondary"
-              value={filterValues.phone}
               sx={[
                 {
                   '&: hover': {
@@ -147,7 +132,6 @@ const AddressDetail = (props: Props) => {
                 },
                 inputStyles,
               ]}
-              onChange={(e) => setFilterValues({ ...filterValues, phone: e.target.value })}
             />
           )}
         />

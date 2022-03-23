@@ -1,7 +1,8 @@
-import { Box, Checkbox, FormControlLabel, Input, Typography } from '@mui/material';
+import { Box, FormControl, FormControlLabel, FormLabel, Input, Radio, RadioGroup } from '@mui/material';
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { data_type } from '../../constant';
 import { baseInputStyle } from '../../pages/AddUserPage';
 
 interface Props {}
@@ -12,19 +13,22 @@ const UserActivity = (props: Props) => {
 
   return (
     <>
-      <Box sx={{ display: 'flex' }}>
-        <Typography variant="subtitle1" gutterBottom component="div" sx={{ color: '#fff', padding: '1vh 2vw' }}>
+      <FormControl sx={{}}>
+        <FormLabel id="data_type-radio-buttons-group-label" sx={{ color: '#fff', padding: '1vh 2vw' }}>
           User activity
-        </Typography>
-        <Box>
-          <FormControlLabel sx={{ color: '#fff' }} control={<Checkbox sx={{ color: '#fff' }} />} label="Register" />
-          <FormControlLabel
-            sx={{ color: '#fff' }}
-            control={<Checkbox sx={{ color: '#fff' }} />}
-            label="Last logged in"
-          />
-        </Box>
-      </Box>
+        </FormLabel>
+        <RadioGroup
+          aria-labelledby="data_type-radio-buttons-group-label"
+          defaultValue={'R'}
+          name="data_type-radio-buttons-group"
+        >
+          {data_type?.map((i) => {
+            return (
+              <FormControlLabel key={i.id} value={i.value} control={<Radio />} label={i.name} sx={{ color: '#fff' }} />
+            );
+          })}
+        </RadioGroup>
+      </FormControl>
       <Box sx={{ marginLeft: '31vh' }}>
         <DatePicker
           selectsRange={true}

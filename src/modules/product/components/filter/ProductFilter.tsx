@@ -1,7 +1,3 @@
-import '@fontsource/roboto/300.css';
-import '@fontsource/roboto/400.css';
-import '@fontsource/roboto/500.css';
-import '@fontsource/roboto/700.css';
 import KeyboardDoubleArrowDownRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowDownRounded';
 import { Box, Button, Checkbox, Collapse, FormControlLabel, Grid, Input, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -10,47 +6,27 @@ import { API_PATHS } from '../../../../configs/api';
 import { IProductFilter } from '../../../../models/filter';
 import { ICategories } from '../../../../models/utils';
 import { selectBaseStyles } from '../../pages/AddProductPage';
+import { stockStatus, availability } from '../../constant';
 
 interface Props {}
 
-const stockStatus = [
-  { id: '0', name: 'Any stock status' },
-  { id: '1', name: 'In stock' },
-  { id: '2', name: 'Low stock' },
-  { id: '3', name: 'SOLD' },
-];
-const availability = [
-  { id: '0', name: 'Any availability status' },
-  { id: '1', name: 'Only enabled' },
-  { id: '2', name: 'Only disabled' },
-];
-
 const ProductFilter = (props: Props) => {
   const [categoriesSelector, setCategoriesSelector] = useState<ICategories[]>();
-  const [filterValues, setFilterValues] = useState<IProductFilter>({
-    keywords: '',
-    categories: '',
-    stockStatus: '',
-    availability: '',
-    vendor: '',
-  });
   const [open, setOpen] = useState(false);
-  const {
-    control,
-    // register,
-    handleSubmit,
-    // formState: { errors },
-  } = useForm<IProductFilter>();
+  const { control, handleSubmit } = useForm<IProductFilter>();
 
   const handleOpen = () => {
     setOpen((prev) => !prev);
+  };
+
+  const onSubmit = (data: IProductFilter) => {
+    console.log('data', data);
   };
 
   const fetchData = useCallback(() => {
     fetch(API_PATHS.categories)
       .then((response) => response.json())
       .then((data) => {
-        // console.log('categories:', data);
         setCategoriesSelector(data.data);
       })
       .catch((error) => {
@@ -63,7 +39,7 @@ const ProductFilter = (props: Props) => {
   }, [fetchData]);
 
   return (
-    <>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Box sx={{ marginTop: '10vh' }}>
         <Typography variant="h4" gutterBottom component="div" sx={{ color: '#fff' }}>
           Products
@@ -81,7 +57,6 @@ const ProductFilter = (props: Props) => {
                       id="outlined-basic"
                       color="secondary"
                       placeholder="Search keywords"
-                      value={filterValues.keywords}
                       sx={[
                         {
                           '&: hover': {
@@ -90,7 +65,6 @@ const ProductFilter = (props: Props) => {
                         },
                         selectBaseStyles,
                       ]}
-                      onChange={(e) => setFilterValues({ ...filterValues, keywords: e.target.value })}
                     />
                   )}
                 />
@@ -100,12 +74,7 @@ const ProductFilter = (props: Props) => {
                   control={control}
                   name="categories"
                   render={({ field }) => (
-                    <select
-                      {...field}
-                      defaultValue={0}
-                      style={selectBaseStyles}
-                      onChange={(e) => setFilterValues({ ...filterValues, categories: e.target.value })}
-                    >
+                    <select {...field} defaultValue={0} style={selectBaseStyles}>
                       <option value={0} selected>
                         Any category
                       </option>
@@ -125,12 +94,7 @@ const ProductFilter = (props: Props) => {
                   control={control}
                   name="stockStatus"
                   render={({ field }) => (
-                    <select
-                      {...field}
-                      defaultValue={0}
-                      style={selectBaseStyles}
-                      onChange={(e) => setFilterValues({ ...filterValues, stockStatus: e.target.value })}
-                    >
+                    <select {...field} defaultValue={'all'} style={selectBaseStyles}>
                       {stockStatus.map((sst) => {
                         return (
                           <option key={sst.id} value={sst.id}>
@@ -144,6 +108,7 @@ const ProductFilter = (props: Props) => {
               </Grid>
               <Grid item xs={1}>
                 <Button
+                  type="submit"
                   variant="contained"
                   sx={{
                     backgroundColor: '#b18aff',
@@ -210,12 +175,7 @@ const ProductFilter = (props: Props) => {
                     control={control}
                     name="availability"
                     render={({ field }) => (
-                      <select
-                        {...field}
-                        defaultValue={0}
-                        style={selectBaseStyles}
-                        onChange={(e) => setFilterValues({ ...filterValues, availability: e.target.value })}
-                      >
+                      <select {...field} defaultValue={'all'} style={selectBaseStyles}>
                         {availability.map((avai) => {
                           return (
                             <option key={avai.id} value={avai.id}>
@@ -268,7 +228,7 @@ const ProductFilter = (props: Props) => {
           <KeyboardDoubleArrowDownRoundedIcon />
         </Button>
       </Box>
-    </>
+    </form>
   );
 };
 
