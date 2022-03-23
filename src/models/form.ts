@@ -4,7 +4,7 @@ export interface IPriceInventory {
   price: string;
   sale: boolean;
   saledPrice: string;
-  arrivalDate: string;
+  arrivalDate: Date | null;
   quantityInStock: string;
 }
 

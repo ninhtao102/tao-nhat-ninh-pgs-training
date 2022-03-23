@@ -29,7 +29,7 @@ const MultiSelectMembership = (props: Props) => {
           color="secondary"
           value={selected}
           onChange={handleChange}
-          sx={{ width: '29vh', height: '5.5vh', border: '1px solid black', backgroundColor: '#252547' }}
+          sx={{ width: '29vh', height: '40px', border: '1px solid black', backgroundColor: '#252547' }}
           renderValue={(selected: any) => selected.join(', ')}
           // MenuProps={MenuProps}
         >

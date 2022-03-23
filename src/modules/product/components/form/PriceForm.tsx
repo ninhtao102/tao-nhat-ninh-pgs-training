@@ -1,9 +1,11 @@
-import { Box, Checkbox, Grid, Input, MenuItem, Select, Typography } from '@mui/material';
+import { Box, Checkbox, Grid, Input, MenuItem, Select, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { FormattedMessage } from 'react-intl';
 import { IPriceInventory } from '../../../../models/form';
 import { baseInputStyle } from '../../pages/AddProductPage';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const titleRowForm = [
   { title: 'Memberships', require: false },
@@ -16,13 +18,14 @@ const titleRowForm = [
 interface Props {}
 
 const PriceInventoryForm = (props: Props) => {
+  const [startDate, setStartDate] = useState(new Date());
   const [formValues, setFormValues] = useState<IPriceInventory>({
     membership: '',
     tax: false,
     price: '',
     sale: false,
     saledPrice: '',
-    arrivalDate: '',
+    arrivalDate: new Date(),
     quantityInStock: '',
   });
 
@@ -152,20 +155,19 @@ const PriceInventoryForm = (props: Props) => {
               </Box>
             </Box>
 
-            <Controller
-              control={control}
-              name="arrivalDate"
-              render={({ field }) => (
-                <Input
-                  {...field}
-                  id="arrivalDate"
-                  color="secondary"
-                  value={formValues.arrivalDate}
-                  sx={[baseInputStyle, { width: '70%', marginTop: '2vh' }]}
-                  onChange={(e) => setFormValues({ ...formValues, arrivalDate: e.target.value })}
-                />
-              )}
-            />
+            <Box sx={{ width: '70%', marginTop: '2vh' }}>
+              <Controller
+                control={control}
+                name="arrivalDate"
+                render={({ field }) => (
+                  <DatePicker
+                    selected={startDate}
+                    onChange={(date: any) => setStartDate(date)}
+                    customInput={<Input sx={[baseInputStyle, { width: '100%' }]} />}
+                  />
+                )}
+              />
+            </Box>
 
             <Box sx={{ display: 'flex' }}>
               <Controller

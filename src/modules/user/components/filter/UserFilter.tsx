@@ -24,7 +24,6 @@ const status = [
 interface Props {}
 
 const UserFilter = (props: Props) => {
-  const [value, setValue] = React.useState<DateRange<Date>>([null, null]);
   const [filterValues, setFilterValues] = useState<IUserFilter>({
     keywords: '',
     membership: '',
@@ -126,7 +125,7 @@ const UserFilter = (props: Props) => {
               <Grid item xs={4}>
                 <AddressDetail />
               </Grid>
-              <Grid item xs={5}>
+              <Grid item xs={8}>
                 <UserActivity />
               </Grid>
             </Grid>
