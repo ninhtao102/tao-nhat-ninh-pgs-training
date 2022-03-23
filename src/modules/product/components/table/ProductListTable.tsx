@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Checkbox,
+  Link,
   Modal,
   Paper,
   TableBody,
@@ -12,33 +13,25 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Link,
+  TableSortLabel,
+  Typography,
 } from '@mui/material';
 import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
-import { API_PATHS } from '../../../../configs/api';
+import { API_HEADER, API_PATHS } from '../../../../configs/api';
 import { IProductItem } from '../../../../models/product';
+import { ISort } from '../../../../models/utils';
+import { columns } from '../../constant';
 import ModalUpdate from '../table/ModalUpdate';
 
 interface Props {}
-
-const columns = [
-  { field: 'id', headerName: 'SKU' },
-  { field: 'id', headerName: 'Name' },
-  { field: 'id', headerName: 'Category' },
-  { field: 'id', headerName: 'Price' },
-  { field: 'id', headerName: 'In stock' },
-  { field: 'id', headerName: 'Vendor' },
-  { field: 'id', headerName: 'Arrival Date' },
-  { field: 'id', headerName: '' },
-];
 
 const ProductListTable = (props: Props) => {
   const [rows, setRows] = useState<IProductItem[]>();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [totalItem, setTotalItem] = useState();
-
+  const [sortInfo, setsortInfo] = useState<ISort>();
   const [openModalUpdate, setOpenModalUpdate] = React.useState(false);
 
   const handleOpenModalUpdate = () => setOpenModalUpdate(true);
@@ -50,6 +43,11 @@ const ProductListTable = (props: Props) => {
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
+  };
+
+  const handleSort = (id: string) => {
+    const isSort = sortInfo?.order_by === id && sortInfo.sort === 'desc';
+    setsortInfo({ sort: isSort ? 'asc' : 'desc', order_by: id });
   };
 
   const fetchData = useCallback(() => {
@@ -64,9 +62,30 @@ const ProductListTable = (props: Props) => {
       });
   }, []);
 
+  const fetchSort = useCallback(() => {
+    fetch(API_PATHS.products, {
+      method: 'post',
+      ...API_HEADER,
+      body: JSON.stringify({
+        order_by: sortInfo?.sort.toUpperCase(),
+        sort: sortInfo?.order_by,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setRows(data.data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }, [sortInfo?.order_by, sortInfo?.sort]);
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+  useEffect(() => {
+    fetchSort();
+  }, [fetchSort]);
 
   return (
     <>
@@ -81,7 +100,6 @@ const ProductListTable = (props: Props) => {
           <TableContainer
             sx={{
               minWidth: 650,
-              // maxHeight: 650,
               backgroundColor: '#323259',
             }}
             aria-label="simple table"
@@ -91,11 +109,52 @@ const ProductListTable = (props: Props) => {
                 <TableCell align="left">
                   <Checkbox size="small" sx={{ color: '#fff' }} />
                 </TableCell>
-                {columns.map((col) => (
-                  <TableCell key={col.field} align="left" sx={{ color: '#fff', fontWeight: 'bold', fontSize: '16px' }}>
-                    {col.headerName}
-                  </TableCell>
-                ))}
+
+                {columns.map((col) => {
+                  if (!col.canSort) {
+                    return (
+                      <TableCell
+                        key={col.headerName}
+                        align="left"
+                        sx={{ color: '#fff', fontWeight: 'bold', fontSize: '16px' }}
+                      >
+                        {col.headerName}
+                      </TableCell>
+                    );
+                  } else {
+                    return (
+                      <TableCell
+                        key={col.headerName}
+                        align="left"
+                        sortDirection={sortInfo?.sort === col.headerName ? sortInfo?.sort : false}
+                        sx={{ color: '#fff', fontWeight: 'bold', fontSize: '16px' }}
+                      >
+                        <TableSortLabel
+                          active={sortInfo?.sort === col.id}
+                          onClick={() => handleSort(col.id)}
+                          sx={{
+                            color: 'white',
+                            '&: hover': {
+                              color: '#b18aff',
+                            },
+                          }}
+                          direction={
+                            sortInfo?.sort === col.id ? (sortInfo?.order_by as 'desc' | 'asc' | undefined) : 'asc'
+                          }
+                        >
+                          <Typography sx={{ fontSize: '13px' }} noWrap>
+                            {col.headerName}
+                          </Typography>
+                          {sortInfo?.sort === col.id ? (
+                            <Box component="span" sx={{}}>
+                              {sortInfo?.order_by === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                            </Box>
+                          ) : null}
+                        </TableSortLabel>
+                      </TableCell>
+                    );
+                  }
+                })}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -111,8 +170,6 @@ const ProductListTable = (props: Props) => {
                             color: '#2dc653',
                             padding: '6px',
                             alignSelf: 'center',
-                            // borderLeft: '0.5px solid #fff',
-                            // borderRight: '0.5px dashed #fff',
                           }}
                         />
                       </Button>
@@ -192,6 +249,7 @@ const ProductListTable = (props: Props) => {
             </TableBody>
           </TableContainer>
         </TableContainer>
+
         <TablePagination
           rowsPerPageOptions={[25, 50, 75, 100]}
           component="div"
