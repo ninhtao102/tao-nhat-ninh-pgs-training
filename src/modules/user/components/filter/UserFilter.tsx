@@ -1,10 +1,9 @@
 import KeyboardDoubleArrowDownRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowDownRounded';
 import { Box, Button, Collapse, Grid, Input, Typography } from '@mui/material';
-import React, { useCallback, useEffect, useState } from 'react';
-import { Control, Controller, useForm } from 'react-hook-form';
-import { API_HEADER, API_PATHS } from '../../../../configs/api';
+import React, { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { IUserFilter } from '../../../../models/filter';
-import { status } from '../../constant';
+import { userStatus } from '../../constant';
 import { selectBaseStyles } from '../../pages/AddUserPage';
 import AddressDetail from './AddressDetail';
 import MultiSelectMembership from './MultiSelectMembership';
@@ -12,10 +11,11 @@ import MultiSelectRole from './MultiSelectRole';
 import UserActivity from './UserActivity';
 
 interface Props {
-  control: Control<IUserFilter, any>;
+  handleFilter: (data: IUserFilter) => void;
 }
 
 const UserFilter = (props: Props) => {
+  const { handleFilter } = props;
   const [open, setOpen] = useState(false);
   const { control, handleSubmit } = useForm<IUserFilter>();
 
@@ -25,41 +25,8 @@ const UserFilter = (props: Props) => {
 
   const onSubmit = (data: IUserFilter) => {
     console.log('data', data);
+    handleFilter(data);
   };
-
-  const fetchData = useCallback(() => {
-    fetch(API_PATHS.users, {
-      method: 'post',
-      ...API_HEADER,
-      body: JSON.stringify({
-        address: 'dia chi',
-        count: 25,
-        country: 'GB',
-        date_range: [],
-        date_type: 'R',
-        memberships: ['M_4'],
-        order_by: 'ASC',
-        page: 1,
-        phone: '098',
-        search: 'asd',
-        sort: 'fistName',
-        state: 'Antrim',
-        status: ['U'],
-        types: ['3', '2'],
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        // setRows(data.data);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-  }, []);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -73,7 +40,7 @@ const UserFilter = (props: Props) => {
               <Grid item xs={4}>
                 <Controller
                   control={control}
-                  name="keywords"
+                  name="search"
                   render={({ field }) => (
                     <Input
                       {...field}
@@ -98,7 +65,7 @@ const UserFilter = (props: Props) => {
                   name="status"
                   render={({ field }) => (
                     <select {...field} defaultValue={''} style={selectBaseStyles}>
-                      {status?.map((i) => {
+                      {userStatus?.map((i) => {
                         return (
                           <option key={i.id} value={i.value}>
                             {i.name}
