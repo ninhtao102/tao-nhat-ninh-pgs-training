@@ -29,11 +29,17 @@ export interface IProductParams {
   images: any;
   category: string;
   description: any;
-  sale: number;
-}
-
-export interface IPriceInventory {
   membership: string;
-  price: string | number;
-  arrivalDate: Date;
+  tax: boolean;
+  price: string;
+  sale: boolean;
+  saledPrice: string;
+  arrivalDate: Date | null;
+  quantityInStock: string;
+  continental: string;
+  zone: string;
+  metaTags: string;
+  metaDesc: string;
+  metaKeywords: string;
+  productPageTitle: string;
 }
