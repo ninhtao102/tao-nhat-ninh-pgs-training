@@ -8,17 +8,28 @@ export interface IProductFilter {
 }
 
 export interface IUserFilter {
-  keywords: string;
-  membership: string;
-  userTypes: string;
-  status: string;
-  country: any;
-  // country: string;
-  state: string;
+  // keywords: string;
+  // membership: string;
+  // userTypes: string;
+  // status: string | undefined;
+  // country: any;
+  // // country: string;
+  // state: string;
+  // address: string;
+  // phone: string;
+  // userActivity: string;
+  // dateRange: string;
   address: string;
+  country: string;
+  date_range: [];
+  date_type: string;
+  memberships: [];
   phone: string;
-  userActivity: string;
-  dateRange: string;
+  search: string;
+  sort: string;
+  state: string;
+  status: [];
+  types: [];
 }
 
 export interface IUserRole {
@@ -33,12 +44,4 @@ export interface IUserRole {
   //   id: string;
   //   name: string;
   // };
-}
-
-export interface IAddress {
-  // country: '' | IShippingParams[];
-  country: any;
-  state: string;
-  address: string;
-  phone: string;
 }
