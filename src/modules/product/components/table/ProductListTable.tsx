@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Checkbox,
-  Link,
   Modal,
   Paper,
   TableBody,
@@ -18,6 +17,7 @@ import {
 } from '@mui/material';
 import moment from 'moment';
 import React, { useCallback, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { API_HEADER, API_PATHS } from '../../../../configs/api';
 import { IProductItem } from '../../../../models/product';
 import { ISort } from '../../../../models/utils';
@@ -195,7 +195,11 @@ const ProductListTable = (props: Props) => {
                       overflow: 'hidden',
                     }}
                   >
-                    <Link href="#" underline="hover">
+                    <Link
+                      className="detailLink"
+                      style={{ textDecoration: 'none' }}
+                      to="/products/product-detail/{product_id}"
+                    >
                       {item.name}
                     </Link>
                   </TableCell>
@@ -221,7 +225,7 @@ const ProductListTable = (props: Props) => {
                       textOverflow: 'ellipsis',
                     }}
                   >
-                    <Link href="#" underline="hover">
+                    <Link className="detailLink" style={{ textDecoration: 'none' }} to="/user/user-detail/{id}">
                       {item.vendor}
                     </Link>
                   </TableCell>

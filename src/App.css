@@ -62,3 +62,20 @@
   font-size: 12px;
   padding: 0 1vh;
 }
+
+.detailLink {
+  text-decoration: none;
+  color: #2071ff;
+}
+
+.navLink {
+  text-decoration: none;
+}
+
+.navLink:hover {
+  color: #b18aff !important;
+}
+
+.activeNavLink {
+  color: #b18aff;
+}

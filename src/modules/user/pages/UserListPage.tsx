@@ -1,5 +1,6 @@
-import { Box, Button, Link } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { API_HEADER, API_PATHS } from '../../../configs/api';
 import { IUserFilter } from '../../../models/filter';
 import { IUserItem } from '../../../models/user';
@@ -79,26 +80,25 @@ const UserListPage = (props: Props) => {
         }}
       >
         <UserFilter handleFilter={handleFilter} />
-        <Button
-          variant="contained"
-          sx={{
-            margin: '1vh 0 4vh 0',
-            backgroundColor: '#b18aff',
-            '&:hover ': {
+        <Link style={{ textDecoration: 'none' }} to="/user/new-user">
+          <Button
+            variant="contained"
+            sx={{
+              margin: '1vh 0 4vh 0',
               backgroundColor: '#b18aff',
-              color: '#000',
-            },
-            '&:hover #newProductLink': {
-              backgroundColor: '#b18aff',
-              color: '#000',
-            },
-          }}
-        >
-          <Link id="newProductLink" href="http://localhost:3000/user/new-user" underline="none" sx={{ color: '#fff' }}>
+              '&:hover ': {
+                backgroundColor: '#b18aff',
+                color: '#000',
+              },
+              '&:hover #newProductLink': {
+                backgroundColor: '#b18aff',
+                color: '#000',
+              },
+            }}
+          >
             Add User
-          </Link>
-          {/* Link react dom */}
-        </Button>
+          </Button>
+        </Link>
         {tableData && (
           <UserListTable
             tableData={tableData}

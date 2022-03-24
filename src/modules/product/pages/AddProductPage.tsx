@@ -1,10 +1,10 @@
 import KeyboardBackspaceRoundedIcon from '@mui/icons-material/KeyboardBackspaceRounded';
-import { Button, Link, Box } from '@mui/material';
+import { Button, Box } from '@mui/material';
 import React from 'react';
+import { Control } from 'react-hook-form';
+import { Link } from 'react-router-dom';
+import { IProductParams } from '../../../models/product';
 import AddProductForm from '../components/form/AddProductForm';
-import PriceInventoryForm from '../components/form/PriceForm';
-import ShippingForm from '../components/form/ShippingForm';
-import Marketing from '../components/form/Marketing';
 
 export const baseInputStyle = {
   backgroundColor: '#252547',
@@ -28,18 +28,16 @@ export const selectBaseStyles = {
   borderRadius: '5px',
 };
 
-interface Props {}
+interface Props {
+  control: Control<IProductParams, any>;
+}
 
 const AddProductPage = (props: Props) => {
+  const { control } = props;
   return (
     <div style={{ flex: '1', backgroundColor: '#323259' }}>
       <Box sx={{ backgroundColor: '#1b1b38', padding: '0 5vh' }}>
-        <Link
-          id="productManager"
-          href="http://localhost:3000/products/manager-product"
-          underline="none"
-          sx={{ color: '#fff' }}
-        >
+        <Link style={{ textDecoration: 'none' }} to="/products/manage-product">
           <Button
             variant="contained"
             sx={{
@@ -54,10 +52,7 @@ const AddProductPage = (props: Props) => {
           </Button>
         </Link>
       </Box>
-      <AddProductForm />
-      <PriceInventoryForm />
-      <ShippingForm />
-      <Marketing />
+      <AddProductForm control={control} />
     </div>
   );
 };

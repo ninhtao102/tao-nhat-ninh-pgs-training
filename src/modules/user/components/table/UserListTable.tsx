@@ -3,7 +3,6 @@ import {
   Box,
   Button,
   Checkbox,
-  Link,
   Paper,
   TableBody,
   TableCell,
@@ -16,6 +15,7 @@ import {
 } from '@mui/material';
 import moment from 'moment';
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { IUserItem } from '../../../../models/user';
 import { ISort } from '../../../../models/utils';
 import { columns } from '../../constant';
@@ -130,14 +130,14 @@ const UserListTable = (props: Props) => {
                     />
                   </TableCell>
                   <TableCell align="left" sx={{ color: '#fff' }}>
-                    <Link href="#" underline="hover">
+                    <Link className="detailLink" style={{ textDecoration: 'none' }} to="/user/user-detail/{user.id}">
                       {item.vendor}
                     </Link>
                     <br />
                     {item?.storeName}
                   </TableCell>
                   <TableCell align="left" sx={{ minWidth: '20vh' }}>
-                    <Link href="#" underline="hover">
+                    <Link className="detailLink" style={{ textDecoration: 'none' }} to="/user/user-detail/{user.id}">
                       {item.fistName} {item.lastName}
                     </Link>
                   </TableCell>

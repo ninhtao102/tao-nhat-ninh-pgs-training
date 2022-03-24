@@ -2,9 +2,9 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
-import { Collapse, Drawer, Link, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Collapse, Drawer, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 interface Props {
   sideBarOpen: boolean;
@@ -31,20 +31,25 @@ const SideBar = (props: Props) => {
     switch (currentPath) {
       case '/products/manage-product':
         setproductNav('#6f53b4');
+        setuserNav('#fff');
         break;
       case '/products/new-product':
         setproductNav('#6f53b4');
+        setuserNav('#fff');
         break;
       case '/user/manage-user':
         setuserNav('#6f53b4');
+        setproductNav('#fff');
         break;
       case '/user/new-user':
         setuserNav('#6f53b4');
+        setproductNav('#fff');
         break;
       default:
         setproductNav('#fff');
+        setuserNav('#fff');
     }
-  }, [document.onload]);
+  }, [currentPath]);
 
   return (
     <div style={{ backgroundColor: '#323259', marginTop: '64px', zIndex: 1, boxShadow: '1px 1px 8px black' }}>
@@ -69,53 +74,50 @@ const SideBar = (props: Props) => {
         }}
       >
         <List component="nav" aria-labelledby="nested-list-subheader" sx={{ width: 'inherit', position: 'fixed' }}>
-          <ListItemButton onClick={handleClickCatalog} sx={{ color: '#fff', ':hover': { color: '#6f53b4' } }}>
+          <ListItemButton onClick={handleClickCatalog} sx={{ color: productNav, ':hover': { color: '#6f53b4' } }}>
             <ListItemIcon>
-              <LocalOfferOutlinedIcon sx={{ color: '#fff' }} />
+              <LocalOfferOutlinedIcon sx={{ color: productNav }} />
             </ListItemIcon>
-            <ListItemText primary="Catalog" />
+            <ListItemText primary="Catalog" sx={{ color: productNav }} />
             {openCatalog ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
           <Collapse in={openCatalog} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItemButton
-                sx={{ mx: 2, borderTop: '1px solid #000', ':hover #productListLink': { color: '#6f53b4' } }}
+              <Link
+                to="/products/manage-product"
+                className="navLink"
+                style={{
+                  color: productNav,
+                }}
               >
-                <Link
-                  id="productListLink"
-                  href="http://localhost:3000/products/manage-product"
-                  underline="none"
-                  sx={{
-                    color: productNav,
-                  }}
+                <ListItemButton
+                  sx={{ mx: 2, borderTop: '1px solid #000', ':hover #productListLink': { color: '#6f53b4' } }}
                 >
                   <ListItemText primary="Products" />
-                </Link>
-              </ListItemButton>
+                </ListItemButton>
+              </Link>
             </List>
           </Collapse>
           <ListItemButton
             onClick={handleClickUsers}
-            sx={{ borderTop: '1px solid #000', ':hover': { color: '#6f53b4' } }}
+            className="navLink"
+            sx={{ color: userNav, borderTop: '1px solid #000' }}
           >
             <ListItemIcon>
-              <GroupOutlinedIcon sx={{ color: '#fff' }} />
+              <GroupOutlinedIcon className="navLink" sx={{ color: userNav }} />
             </ListItemIcon>
-            <ListItemText primary="Users" />
+            <ListItemText primary="Users" sx={{ color: userNav }} />
             {openUsers ? <ExpandLess /> : <ExpandMore />}
           </ListItemButton>
           <Collapse in={openUsers} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <ListItemButton sx={{ mx: 2, borderTop: '1px solid #000', ':hover #userListLink': { color: '#6f53b4' } }}>
-                <Link
-                  id="userListLink"
-                  href="http://localhost:3000/user/manage-user"
-                  underline="none"
-                  sx={{ color: userNav }}
+              <Link to="/user/manage-user" id="userListLink" className="navLink" style={{ color: userNav }}>
+                <ListItemButton
+                  sx={{ mx: 2, borderTop: '1px solid #000', ':hover #userListLink': { color: '#6f53b4' } }}
                 >
-                  <ListItemText primary="Users" />
-                </Link>
-              </ListItemButton>
+                  <ListItemText primary="Users" className="navLink" sx={{ ':hover ': { color: '#6f53b4' } }} />
+                </ListItemButton>
+              </Link>
             </List>
           </Collapse>
         </List>
