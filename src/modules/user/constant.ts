@@ -1,11 +1,11 @@
-export const status = [
-  { id: '0', value: '', name: 'Any status' },
+export const userStatus = [
+  { id: '0', value: undefined, name: 'Any status' },
   { id: '1', value: 'E', name: 'Enable' },
   { id: '2', value: 'D', name: 'Disable' },
   { id: '3', value: 'U', name: 'Unapproved vendor' },
 ];
 
-export const data_type = [
+export const dataType = [
   { id: '1', value: 'R', name: 'Register' },
   { id: '2', value: 'L', name: 'Last logged in' },
 ];
