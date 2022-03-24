@@ -30,3 +30,18 @@ export interface IUserItem {
   created: string;
   last_login: string;
 }
+
+export interface IUserParams {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirm_password: string;
+  paymentRailsType: string;
+  access_level: string;
+  memberShip: string;
+  require: boolean;
+  taxExempt: boolean;
+  forceChangePassword: number;
+  membership_id: string;
+}
