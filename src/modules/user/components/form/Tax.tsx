@@ -1,25 +1,18 @@
-import React, { useState } from 'react';
-import { Box, Button, Grid, Input, MenuItem, Select, TextField, Typography, Switch, Checkbox } from '@mui/material';
-import { Controller, useForm } from 'react-hook-form';
-import { ITax } from '../../../../models/form';
+import { Box, Checkbox, Grid, Typography } from '@mui/material';
+import React from 'react';
+import { Control, Controller } from 'react-hook-form';
+import { IUserParams } from '../../../../models/user';
 
-interface Props {}
+interface Props {
+  control: Control<IUserParams, any>;
+}
 
 const Tax = (props: Props) => {
-  const [formValues, setFormValues] = useState<ITax>({
-    tax: false,
-  });
-
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<ITax>();
+  const { control } = props;
 
   return (
-    <form>
-      <Box sx={{ backgroundColor: '#1b1b38', marginTop: '2vh', padding: '5vh 5vh 10vh 5vh' }}>
+    <>
+      <Box sx={{ backgroundColor: '#1b1b38', marginTop: '2vh', padding: '5vh' }}>
         <Typography variant="h6" gutterBottom component="div" sx={{ color: '#fff' }}>
           Access information
         </Typography>
@@ -35,21 +28,14 @@ const Tax = (props: Props) => {
 
           <Grid item xs={4}>
             <Controller
-              render={({ field }) => (
-                <Checkbox
-                  {...field}
-                  id="tax-checkbox"
-                  sx={{ color: '#fff' }}
-                  //   onChange={(e) => setFormValues({ ...formValues, tax: e.target.checked })}
-                />
-              )}
-              name="tax"
               control={control}
+              name="taxExempt"
+              render={({ field }) => <Checkbox {...field} id="tax-checkbox" sx={{ color: '#fff' }} />}
             />
           </Grid>
         </Grid>
       </Box>
-    </form>
+    </>
   );
 };
 

@@ -1,21 +1,18 @@
 import { Box, Grid, InputAdornment, TextField, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Control, Controller } from 'react-hook-form';
 import { API_HEADER, API_PATHS } from '../../../../configs/api';
-import { IShipping } from '../../../../models/form';
+import { IProductParams } from '../../../../models/product';
 import { IShippingParams } from '../../../../models/utils';
 import { baseInputStyle } from '../../pages/AddProductPage';
 
-interface Props {}
+interface Props {
+  control: Control<IProductParams, any>;
+}
 
 const ShippingForm = (props: Props) => {
+  const { control } = props;
   const [zones, setZones] = useState<IShippingParams[]>();
-
-  const {
-    control,
-    register,
-    formState: { errors },
-  } = useForm<IShipping>();
 
   const fetchZones = useCallback(() => {
     fetch(API_PATHS.shipping, API_HEADER)
@@ -51,6 +48,11 @@ const ShippingForm = (props: Props) => {
 
           <Grid item xs={8}>
             <Controller
+              control={control}
+              name="continental"
+              rules={{
+                required: { value: true, message: 'This field is requierd' },
+              }}
               render={({ field }) => (
                 <TextField
                   {...field}
@@ -61,13 +63,13 @@ const ShippingForm = (props: Props) => {
                   InputProps={{
                     startAdornment: <InputAdornment position="start">$</InputAdornment>,
                   }}
-                  {...register('continental', {
-                    required: true,
-                  })}
                 />
               )}
-              name="continental"
-              control={control}
+              // {errors?.continental?.message && (
+              //   <p className="valid-field--message" style={{ padding: '1vh' }}>
+              //     {errors?.continental?.message}
+              //   </p>
+              // )}
             />
 
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '70%', marginTop: '2vh' }}>

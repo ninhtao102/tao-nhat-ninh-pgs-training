@@ -2,7 +2,7 @@ import { Box, FormControl, FormControlLabel, FormLabel, Input, Radio, RadioGroup
 import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { data_type } from '../../constant';
+import { dataType } from '../../constant';
 import { baseInputStyle } from '../../pages/AddUserPage';
 
 interface Props {}
@@ -22,7 +22,7 @@ const UserActivity = (props: Props) => {
           defaultValue={'R'}
           name="data_type-radio-buttons-group"
         >
-          {data_type?.map((i) => {
+          {dataType?.map((i) => {
             return (
               <FormControlLabel key={i.id} value={i.value} control={<Radio />} label={i.name} sx={{ color: '#fff' }} />
             );

@@ -6,8 +6,8 @@ export const stockStatus = [
 ];
 export const availability = [
   { id: 'all', name: 'Any availability status' },
-  { id: '1', name: 'Only enabled' },
-  { id: '0', name: 'Only disabled' },
+  { id: 'all', name: 'Only enabled' },
+  { id: 'all', name: 'Only disabled' },
 ];
 
 export const titleAddProductForm = [

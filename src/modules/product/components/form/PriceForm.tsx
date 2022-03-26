@@ -1,25 +1,19 @@
-import { Box, Checkbox, Grid, Input, MenuItem, Select, TextField, Typography } from '@mui/material';
+import { Box, Checkbox, Grid, Input, MenuItem, Select, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { FormattedMessage } from 'react-intl';
-import { IPriceInventory } from '../../../../models/form';
-import { baseInputStyle } from '../../pages/AddProductPage';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { Control, Controller } from 'react-hook-form';
+import { IProductParams } from '../../../../models/product';
 import { titlePriceForm } from '../../constant';
+import { baseInputStyle } from '../../pages/AddProductPage';
 
-interface Props {}
+interface Props {
+  control: Control<IProductParams, any>;
+}
 
 const PriceInventoryForm = (props: Props) => {
+  const { control } = props;
   const [startDate, setStartDate] = useState(new Date());
-
-  const {
-    control,
-    register,
-    formState: { errors },
-  } = useForm<IPriceInventory>({
-    mode: 'onBlur',
-  });
 
   return (
     <form>
@@ -103,6 +97,9 @@ const PriceInventoryForm = (props: Props) => {
               <Controller
                 control={control}
                 name="price"
+                rules={{
+                  required: { value: true, message: 'This field is requierd' },
+                }}
                 render={({ field }) => (
                   <Input
                     {...field}
@@ -110,11 +107,13 @@ const PriceInventoryForm = (props: Props) => {
                     color="secondary"
                     placeholder="0.00"
                     sx={[baseInputStyle, { width: '45%' }]}
-                    {...register('price', {
-                      required: true,
-                    })}
                   />
                 )}
+                //   {errors?.?.message && (
+                //   <p className="valid-field--message" style={{ padding: '1vh' }}>
+                //     {errors?.?.message}
+                //   </p>
+                // )}
               />
 
               <Box sx={{ display: 'inline-flex', marginLeft: '3vh' }}>
@@ -148,23 +147,23 @@ const PriceInventoryForm = (props: Props) => {
               <Controller
                 control={control}
                 name="quantityInStock"
+                rules={{
+                  required: { value: true, message: 'This field is requierd' },
+                }}
                 render={({ field }) => (
                   <Input
                     {...field}
                     id="quantityInStock"
                     color="secondary"
                     sx={[baseInputStyle, { width: '40%', marginTop: '2vh' }]}
-                    {...register('quantityInStock', {
-                      required: true,
-                    })}
                   />
                 )}
               />
-              {errors?.quantityInStock?.type === 'required' && (
+              {/* {errors?.?.message && (
                 <p className="valid-field--message" style={{ padding: '1vh' }}>
-                  <FormattedMessage id="quantityInStockRequire" />
+                  {errors?.?.message}
                 </p>
-              )}
+              )} */}
             </Box>
           </Grid>
         </Grid>

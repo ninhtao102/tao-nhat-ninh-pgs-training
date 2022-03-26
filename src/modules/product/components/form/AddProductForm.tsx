@@ -3,15 +3,19 @@ import { Box, Button, Grid, Input, Switch, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
-import { Controller, useForm } from 'react-hook-form';
-import { FormattedMessage } from 'react-intl';
+import { Control, Controller, useForm } from 'react-hook-form';
 import { API_HEADER, API_PATHS } from '../../../../configs/api';
 import { IProductParams } from '../../../../models/product';
 import { IBrands, ICategories } from '../../../../models/utils';
 import { titleAddProductForm } from '../../constant';
 import { baseInputStyle } from '../../pages/AddProductPage';
+import PriceInventoryForm from './PriceForm';
+import ShippingForm from './ShippingForm';
+import Marketing from './Marketing';
 
-interface Props {}
+interface Props {
+  control: Control<IProductParams, any>;
+}
 
 const AddProductForm = (props: Props) => {
   const [brands, setBrands] = useState<IBrands[]>();
@@ -19,12 +23,15 @@ const AddProductForm = (props: Props) => {
 
   const {
     control,
-    register,
     handleSubmit,
     formState: { errors },
   } = useForm<IProductParams>({
     mode: 'onBlur',
   });
+
+  const onSubmit = (data: IProductParams) => {
+    console.log('data', data);
+  };
 
   const fetchBrands = useCallback(() => {
     fetch(API_PATHS.brands, API_HEADER)
@@ -54,7 +61,7 @@ const AddProductForm = (props: Props) => {
   }, [fetchBrands, fetchCategories]);
 
   return (
-    <form>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <Box sx={{ backgroundColor: '#1b1b38', padding: '2vh 5vh' }}>
         <Typography variant="h4" gutterBottom component="div" sx={{ color: '#fff' }}>
           Add Product
@@ -79,6 +86,9 @@ const AddProductForm = (props: Props) => {
               <Controller
                 control={control}
                 name="vendor"
+                rules={{
+                  required: { value: true, message: 'This field is requierd' },
+                }}
                 render={({ field }) => (
                   <Input
                     {...field}
@@ -86,15 +96,12 @@ const AddProductForm = (props: Props) => {
                     color="secondary"
                     placeholder="Type Vendor to select"
                     sx={baseInputStyle}
-                    {...register('vendor', {
-                      required: true,
-                    })}
                   />
                 )}
               />
-              {errors?.vendor?.type === 'required' && (
-                <p className="valid-field--message">
-                  <FormattedMessage id="vendorRequire" />
+              {errors?.vendor?.message && (
+                <p className="valid-field--message" style={{ padding: '1vh' }}>
+                  {errors?.vendor?.message}
                 </p>
               )}
             </Box>
@@ -103,21 +110,11 @@ const AddProductForm = (props: Props) => {
               <Controller
                 control={control}
                 name="productTitle"
-                render={({ field }) => (
-                  <Input
-                    {...field}
-                    id="productTitle"
-                    color="secondary"
-                    sx={baseInputStyle}
-                    {...register('productTitle', {
-                      required: true,
-                    })}
-                  />
-                )}
+                render={({ field }) => <Input {...field} id="productTitle" color="secondary" sx={baseInputStyle} />}
               />
-              {errors?.productTitle?.type === 'required' && (
-                <p className="valid-field--message">
-                  <FormattedMessage id="titleRequire" />
+              {errors?.productTitle?.message && (
+                <p className="valid-field--message" style={{ padding: '1vh' }}>
+                  {errors?.productTitle?.message}
                 </p>
               )}
             </Box>
@@ -126,15 +123,11 @@ const AddProductForm = (props: Props) => {
               <Controller
                 control={control}
                 name="brand"
+                rules={{
+                  required: { value: true, message: 'This field is requierd' },
+                }}
                 render={({ field }) => (
-                  <select
-                    {...field}
-                    {...register('brand', {
-                      required: true,
-                    })}
-                    defaultValue={''}
-                    style={baseInputStyle}
-                  >
+                  <select {...field} defaultValue={''} style={baseInputStyle}>
                     <option value="" disabled selected hidden>
                       Type Brand name to select
                     </option>
@@ -148,9 +141,9 @@ const AddProductForm = (props: Props) => {
                   </select>
                 )}
               />
-              {errors?.brand?.type === 'required' && (
-                <p className="valid-field--message">
-                  <FormattedMessage id="brandRequire" />
+              {errors?.brand?.message && (
+                <p className="valid-field--message" style={{ padding: '1vh' }}>
+                  {errors?.brand?.message}
                 </p>
               )}
             </Box>
@@ -159,15 +152,11 @@ const AddProductForm = (props: Props) => {
               <Controller
                 control={control}
                 name="condition"
+                rules={{
+                  required: { value: true, message: 'This field is requierd' },
+                }}
                 render={({ field }) => (
-                  <select
-                    {...field}
-                    {...register('condition', {
-                      required: true,
-                    })}
-                    defaultValue={''}
-                    style={baseInputStyle}
-                  >
+                  <select {...field} defaultValue={''} style={baseInputStyle}>
                     <option value="" disabled selected hidden></option>
                     <option value="Used" style={baseInputStyle}>
                       Used
@@ -175,9 +164,9 @@ const AddProductForm = (props: Props) => {
                   </select>
                 )}
               />
-              {errors?.condition?.type === 'required' && (
-                <p className="valid-field--message">
-                  <FormattedMessage id="conditionRequire" />
+              {errors?.condition?.message && (
+                <p className="valid-field--message" style={{ padding: '1vh' }}>
+                  {errors?.condition?.message}
                 </p>
               )}
             </Box>
@@ -195,6 +184,9 @@ const AddProductForm = (props: Props) => {
               <Controller
                 control={control}
                 name="images"
+                // rules={{
+                //   required: { value: true, message: 'This field is requierd' },
+                // }}
                 render={({ field }) => (
                   <Button
                     variant="outlined"
@@ -208,17 +200,17 @@ const AddProductForm = (props: Props) => {
                       type="file"
                       accept="image/*"
                       hidden
-                      multiple
-                      {...register('images', {
-                        required: true,
-                      })}
+                      // multiple
+                      onChange={(e) => {
+                        console.log('aaaaaaa', e.target.files);
+                      }}
                     />
                   </Button>
                 )}
               />
-              {errors?.images?.type === 'required' && (
-                <p className="valid-field--message">
-                  <FormattedMessage id="imagesRequire" />
+              {errors?.images?.message && (
+                <p className="valid-field--message" style={{ padding: '1vh' }}>
+                  {errors?.images?.message}
                 </p>
               )}
             </Box>
@@ -227,15 +219,11 @@ const AddProductForm = (props: Props) => {
               <Controller
                 control={control}
                 name="category"
+                rules={{
+                  required: { value: true, message: 'This field is requierd' },
+                }}
                 render={({ field }) => (
-                  <select
-                    {...field}
-                    {...register('category', {
-                      required: true,
-                    })}
-                    defaultValue={''}
-                    style={baseInputStyle}
-                  >
+                  <select {...field} defaultValue={''} style={baseInputStyle}>
                     <option value="" disabled selected hidden>
                       Type Categories name to select
                     </option>
@@ -249,9 +237,9 @@ const AddProductForm = (props: Props) => {
                   </select>
                 )}
               />
-              {errors?.category?.type === 'required' && (
-                <p className="valid-field--message">
-                  <FormattedMessage id="categoriesRequire" />
+              {errors?.category?.message && (
+                <p className="valid-field--message" style={{ padding: '1vh' }}>
+                  {errors?.category?.message}
                 </p>
               )}
             </Box>
@@ -260,6 +248,9 @@ const AddProductForm = (props: Props) => {
               <Controller
                 control={control}
                 name="description"
+                rules={{
+                  required: { value: true, message: 'This field is requierd' },
+                }}
                 render={({ field: { value, onChange } }) => (
                   <Editor
                     editorState={value}
@@ -277,6 +268,11 @@ const AddProductForm = (props: Props) => {
                   />
                 )}
               />
+              {errors?.description?.message && (
+                <p className="valid-field--message" style={{ padding: '1vh' }}>
+                  {errors?.description?.message}
+                </p>
+              )}
             </Box>
 
             <Controller
@@ -286,6 +282,41 @@ const AddProductForm = (props: Props) => {
             />
           </Grid>
         </Grid>
+      </Box>
+
+      <Box sx={{ backgroundColor: '#323259' }}>
+        <PriceInventoryForm control={control} />
+        <ShippingForm control={control} />
+        <Marketing control={control} />
+      </Box>
+
+      <Box
+        sx={{
+          backgroundColor: '#323259',
+          margin: '0 4vh',
+          padding: '3vh 5vh',
+          boxShadow: '1px 1px 11px #b18aff',
+          width: '75%',
+          position: 'fixed',
+          top: '88vh',
+        }}
+      >
+        <Button
+          type="submit"
+          variant="contained"
+          sx={{
+            display: 'flex',
+            marginRight: '2vh',
+            opacity: '0.5',
+            backgroundColor: '#f0ad4e',
+            '&: hover': {
+              backgroundColor: '#f0ad4e',
+              color: '#000',
+            },
+          }}
+        >
+          Add Product
+        </Button>
       </Box>
     </form>
   );

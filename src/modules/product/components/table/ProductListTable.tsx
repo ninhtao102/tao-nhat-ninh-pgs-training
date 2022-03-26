@@ -16,76 +16,37 @@ import {
   Typography,
 } from '@mui/material';
 import moment from 'moment';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { API_HEADER, API_PATHS } from '../../../../configs/api';
 import { IProductItem } from '../../../../models/product';
 import { ISort } from '../../../../models/utils';
 import { columns } from '../../constant';
 import ModalUpdate from '../table/ModalUpdate';
 
-interface Props {}
+interface Props {
+  tableData: IProductItem[] | undefined;
+  sortInfo: ISort;
+  // totalItem: number;
+  totalItem: undefined;
+  pageInfo: number;
+  handleSort: (id: string) => void;
+  handleCheckItem: (checked: any) => void;
+  handleChangePage: (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, number: number) => void;
+}
 
 const ProductListTable = (props: Props) => {
-  const [rows, setRows] = useState<IProductItem[]>();
-  const [page, setPage] = React.useState(0);
+  const { tableData, sortInfo, totalItem, pageInfo, handleSort, handleCheckItem, handleChangePage } = props;
+
   const [rowsPerPage, setRowsPerPage] = useState(25);
-  const [totalItem, setTotalItem] = useState();
-  const [sortInfo, setsortInfo] = useState<ISort>();
   const [openModalUpdate, setOpenModalUpdate] = React.useState(false);
 
   const handleOpenModalUpdate = () => setOpenModalUpdate(true);
   const handleCloseModalUpdate = () => setOpenModalUpdate(false);
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
-  };
   const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
     setRowsPerPage(+event.target.value);
-    setPage(0);
+    // setPage(0);
   };
-
-  const handleSort = (id: string) => {
-    const isSort = sortInfo?.order_by === id && sortInfo.sort === 'desc';
-    setsortInfo({ sort: isSort ? 'asc' : 'desc', order_by: id });
-  };
-
-  const fetchData = useCallback(() => {
-    fetch(API_PATHS.products)
-      .then((response) => response.json())
-      .then((data) => {
-        setRows(data.data);
-        setTotalItem(data.recordsTotal);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-  }, []);
-
-  const fetchSort = useCallback(() => {
-    fetch(API_PATHS.products, {
-      method: 'post',
-      ...API_HEADER,
-      body: JSON.stringify({
-        order_by: sortInfo?.sort.toUpperCase(),
-        sort: sortInfo?.order_by,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setRows(data.data);
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-  }, [sortInfo?.order_by, sortInfo?.sort]);
-
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
-  useEffect(() => {
-    fetchSort();
-  }, [fetchSort]);
 
   return (
     <>
@@ -158,11 +119,16 @@ const ProductListTable = (props: Props) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((item) => (
+              {tableData?.slice(pageInfo * rowsPerPage, pageInfo * rowsPerPage + rowsPerPage).map((item) => (
                 <TableRow key={item.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
                   <TableCell align="left" sx={{ color: '#fff' }}>
                     <Box sx={{ display: 'flex' }}>
-                      <Checkbox size="small" sx={{ color: '#fff' }} />
+                      <Checkbox
+                        size="small"
+                        sx={{ color: '#fff' }}
+                        checked={item.checked}
+                        // onChange={() => onCheckBox(item.id)}
+                      />
                       <Button onClick={handleOpenModalUpdate}>
                         <PowerSettingsNewRoundedIcon
                           fontSize="medium"
@@ -259,7 +225,7 @@ const ProductListTable = (props: Props) => {
           component="div"
           count={totalItem ? +totalItem : 0}
           rowsPerPage={rowsPerPage}
-          page={page}
+          page={pageInfo}
           showFirstButton={true}
           showLastButton={true}
           onPageChange={handleChangePage}

@@ -1,9 +1,10 @@
 import KeyboardBackspaceRoundedIcon from '@mui/icons-material/KeyboardBackspaceRounded';
-import { Box, Button, Link, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import React from 'react';
+import { Control } from 'react-hook-form';
+import { Link } from 'react-router-dom';
+import { IUserParams } from '../../../models/user';
 import AuthForm from '../components/form/AuthForm';
-import Access from '../components/form/Access';
-import Tax from '../components/form/Tax';
 
 export const baseInputStyle = {
   backgroundColor: '#252547',
@@ -27,13 +28,17 @@ export const selectBaseStyles = {
   borderRadius: '5px',
 };
 
-interface Props {}
+interface Props {
+  control: Control<IUserParams, any>;
+}
 
 const AddUserPage = (props: Props) => {
+  const { control } = props;
+
   return (
     <div style={{ flex: '1', backgroundColor: '#323259' }}>
-      <Box sx={{ backgroundColor: '#1b1b38', padding: '0 5vh' }}>
-        <Link id="productManager" href="http://localhost:3000/user/new-user" underline="none" sx={{ color: '#fff' }}>
+      <Box sx={{ backgroundColor: '#1b1b38', padding: '1vh 5vh' }}>
+        <Link style={{ textDecoration: 'none' }} to="/user/manage-user">
           <Button
             variant="contained"
             sx={{
@@ -51,10 +56,8 @@ const AddUserPage = (props: Props) => {
         <Typography variant="h4" gutterBottom component="div" sx={{ color: '#fff' }}>
           Create profile
         </Typography>
-        <AuthForm />
       </Box>
-      <Access />
-      <Tax />
+      <AuthForm control={control} />
     </div>
   );
 };

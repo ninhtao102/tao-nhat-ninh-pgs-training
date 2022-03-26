@@ -1,26 +1,16 @@
 import { Box, Checkbox, Grid, Typography } from '@mui/material';
-import React, { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { FormattedMessage } from 'react-intl';
-import { IAccess } from '../../../../models/form';
-import { baseInputStyle } from '../../pages/AddUserPage';
+import React from 'react';
+import { Control, Controller } from 'react-hook-form';
+import { IUserParams } from '../../../../models/user';
 import { titleAccessForm } from '../../constant';
+import { baseInputStyle } from '../../pages/AddUserPage';
 
-interface Props {}
+interface Props {
+  control: Control<IUserParams, any>;
+}
 
 const Access = (props: Props) => {
-  const [formValues, setFormValues] = useState<IAccess>({
-    accessLevel: '',
-    memberShip: '',
-    require: false,
-  });
-
-  const {
-    control,
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<IAccess>();
+  const { control } = props;
 
   return (
     <form>
@@ -47,16 +37,12 @@ const Access = (props: Props) => {
             <Box sx={{ display: 'flex' }}>
               <Controller
                 control={control}
-                name="accessLevel"
+                name="access_level"
+                rules={{
+                  required: { value: true, message: 'This field is requierd' },
+                }}
                 render={({ field }) => (
-                  <select
-                    {...field}
-                    {...register('accessLevel', {
-                      required: true,
-                    })}
-                    defaultValue={'Vendor'}
-                    style={baseInputStyle}
-                  >
+                  <select {...field} defaultValue={'Vendor'} style={baseInputStyle}>
                     <option value="Admin" style={baseInputStyle}>
                       Admin
                     </option>
@@ -66,11 +52,11 @@ const Access = (props: Props) => {
                   </select>
                 )}
               />
-              {errors?.accessLevel?.type === 'required' && (
-                <p className="valid-field--message" style={{ padding: '1vh 0' }}>
-                  <FormattedMessage id="accessLevelRequire" />
+              {/* {errors?.access_level?.message && (
+                <p className="valid-field--message" style={{ padding: '1vh' }}>
+                  {errors?.access_level?.message}
                 </p>
-              )}
+              )} */}
             </Box>
 
             <Box sx={{ display: 'flex', marginTop: '2vh' }}>
@@ -80,9 +66,9 @@ const Access = (props: Props) => {
                 render={({ field }) => (
                   <select
                     {...field}
-                    {...register('memberShip', {
-                      required: false,
-                    })}
+                    // {...register('memberShip', {
+                    //   required: false,
+                    // })}
                     defaultValue={'Ignore Membership'}
                     style={baseInputStyle}
                   >
@@ -101,12 +87,7 @@ const Access = (props: Props) => {
               control={control}
               name="require"
               render={({ field }) => (
-                <Checkbox
-                  {...field}
-                  id="require-checkbox"
-                  sx={{ color: '#fff', margin: '2vh 0' }}
-                  onChange={(e) => setFormValues({ ...formValues, require: e.target.checked })}
-                />
+                <Checkbox {...field} id="require-checkbox" sx={{ color: '#fff', margin: '2vh 0' }} />
               )}
             />
           </Grid>

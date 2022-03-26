@@ -1,18 +1,20 @@
 import { Box, Grid, Input, MenuItem, Select, Typography } from '@mui/material';
 import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { IMarketing } from '../../../../models/form';
+import { Control, Controller } from 'react-hook-form';
+import { IProductParams } from '../../../../models/product';
 import { titleMarketingForm } from '../../constant';
 import { baseInputStyle } from '../../pages/AddProductPage';
 
-interface Props {}
+interface Props {
+  control: Control<IProductParams, any>;
+}
 
 const Marketing = (props: Props) => {
-  const { control } = useForm<IMarketing>();
+  const { control } = props;
 
   return (
     <form>
-      <Box sx={{ backgroundColor: '#1b1b38', marginTop: '2vh', padding: '2vh 5vh' }}>
+      <Box sx={{ backgroundColor: '#1b1b38', marginTop: '2vh', padding: '2vh 5vh 15vh 5vh' }}>
         <Typography variant="h4" gutterBottom component="div" sx={{ color: '#fff' }}>
           Marketing
         </Typography>
