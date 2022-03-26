@@ -1,24 +1,13 @@
-import { IShippingParams } from './utils';
 export interface IProductFilter {
-  keywords: string;
-  categories: string;
-  stockStatus: string;
   availability: string;
+  category: string;
+  search: string;
+  search_type: string;
+  stock_status: string;
   vendor: string;
 }
 
 export interface IUserFilter {
-  // keywords: string;
-  // membership: string;
-  // userTypes: string;
-  // status: string | undefined;
-  // country: any;
-  // // country: string;
-  // state: string;
-  // address: string;
-  // phone: string;
-  // userActivity: string;
-  // dateRange: string;
   address: string;
   country: string;
   date_range: [];
