@@ -21,4 +21,11 @@ export interface ISort {
   sort: Order;
 }
 
+export interface IVendors {
+  companyName: string;
+  id: string;
+  login: string;
+  name: string;
+}
+
 export type Order = 'asc' | 'desc';
