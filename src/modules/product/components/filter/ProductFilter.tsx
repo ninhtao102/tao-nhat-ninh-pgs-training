@@ -1,29 +1,36 @@
 import KeyboardDoubleArrowDownRoundedIcon from '@mui/icons-material/KeyboardDoubleArrowDownRounded';
-import { Box, Button, Checkbox, Collapse, FormControlLabel, Grid, Input, Typography } from '@mui/material';
+import { Box, Button, Checkbox, Collapse, FormControl, FormControlLabel, Grid, Input, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { API_PATHS } from '../../../../configs/api';
+import { API_HEADER, API_PATHS } from '../../../../configs/api';
 import { IProductFilter } from '../../../../models/filter';
-import { ICategories } from '../../../../models/utils';
+import { ICategories, IVendors } from '../../../../models/utils';
+import { availability, stockStatus } from '../../constant';
 import { selectBaseStyles } from '../../pages/AddProductPage';
-import { stockStatus, availability } from '../../constant';
 
-interface Props {}
+interface Props {
+  handleFilter: (data: IProductFilter) => void;
+}
 
 const ProductFilter = (props: Props) => {
-  const [categoriesSelector, setCategoriesSelector] = useState<ICategories[]>();
+  const { handleFilter } = props;
   const [open, setOpen] = useState(false);
-  const { control, handleSubmit } = useForm<IProductFilter>();
+  const [searchType, setSearchType] = useState<any>([]);
+  const [vendors, setVendors] = useState<IVendors[]>();
+  const [categoriesSelector, setCategoriesSelector] = useState<ICategories[]>();
+  const { control, setValue, getValues, handleSubmit } = useForm<IProductFilter>();
 
   const handleOpen = () => {
     setOpen((prev) => !prev);
   };
 
   const onSubmit = (data: IProductFilter) => {
-    console.log('data', data);
+    console.log('IProductFilter', data);
+
+    handleFilter(data);
   };
 
-  const fetchData = useCallback(() => {
+  const fetchCategories = useCallback(() => {
     fetch(API_PATHS.categories)
       .then((response) => response.json())
       .then((data) => {
@@ -34,6 +41,23 @@ const ProductFilter = (props: Props) => {
       });
   }, []);
 
+  const fetchData = useCallback(() => {
+    fetch(API_PATHS.vendors, {
+      method: 'post',
+      ...API_HEADER,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setVendors(data.data);
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }, []);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
   useEffect(() => {
     fetchData();
   }, [fetchData]);
@@ -50,7 +74,7 @@ const ProductFilter = (props: Props) => {
               <Grid item xs={5}>
                 <Controller
                   control={control}
-                  name="keywords"
+                  name="search"
                   render={({ field }) => (
                     <Input
                       {...field}
@@ -72,7 +96,7 @@ const ProductFilter = (props: Props) => {
               <Grid item xs={3}>
                 <Controller
                   control={control}
-                  name="categories"
+                  name="category"
                   render={({ field }) => (
                     <select {...field} defaultValue={0} style={selectBaseStyles}>
                       <option value={0} selected>
@@ -92,7 +116,7 @@ const ProductFilter = (props: Props) => {
               <Grid item xs={3}>
                 <Controller
                   control={control}
-                  name="stockStatus"
+                  name="stock_status"
                   render={({ field }) => (
                     <select {...field} defaultValue={'all'} style={selectBaseStyles}>
                       {stockStatus.map((sst) => {
@@ -139,23 +163,52 @@ const ProductFilter = (props: Props) => {
                     Search in:
                   </Typography>
                   <Box sx={{ color: '#fff', width: '22vh', marginLeft: '1vh' }}>
-                    <FormControlLabel
-                      value="name"
-                      control={<Checkbox sx={{ color: '#fff' }} />}
-                      label="Name"
-                      labelPlacement="end"
-                    />
-                    <FormControlLabel
-                      value="sku"
-                      control={<Checkbox sx={{ color: '#fff' }} />}
-                      label="SKU"
-                      labelPlacement="end"
-                    />
-                    <FormControlLabel
-                      value="fullDescription"
-                      control={<Checkbox sx={{ color: '#fff' }} />}
-                      label="Full Description"
-                      labelPlacement="end"
+                    <Controller
+                      control={control}
+                      name="search_type"
+                      render={({ field }) => (
+                        <FormControl {...field}>
+                          <FormControlLabel
+                            value="name"
+                            label="Name"
+                            labelPlacement="end"
+                            onBlur={() => {
+                              const isTrue = getValues('search_type');
+                              isTrue
+                                ? searchType.unshift('name') && setValue('search_type', searchType.toString())
+                                : searchType.splice(searchType.indexOf('name'), 1) &&
+                                  setValue('search_type', searchType.toString());
+                            }}
+                            control={<Checkbox sx={{ color: '#fff' }} />}
+                          />
+                          <FormControlLabel
+                            value="sku"
+                            label="SKU"
+                            labelPlacement="end"
+                            onBlur={() => {
+                              const isTrue = getValues('search_type');
+                              isTrue
+                                ? searchType.push('sku') && setValue('search_type', searchType.toString())
+                                : searchType.splice(searchType.indexOf('sku'), 1) &&
+                                  setValue('search_type', searchType.toString());
+                            }}
+                            control={<Checkbox sx={{ color: '#fff' }} />}
+                          />
+                          <FormControlLabel
+                            value="description"
+                            label="Full Description"
+                            labelPlacement="end"
+                            onBlur={() => {
+                              const isTrue = getValues('search_type');
+                              isTrue
+                                ? searchType.push('description') && setValue('search_type', searchType.toString())
+                                : searchType.splice(searchType.indexOf('description'), 1) &&
+                                  setValue('search_type', searchType.toString());
+                            }}
+                            control={<Checkbox sx={{ color: '#fff' }} />}
+                          />
+                        </FormControl>
+                      )}
                     />
                   </Box>
                 </Box>
@@ -198,16 +251,28 @@ const ProductFilter = (props: Props) => {
                   >
                     Vendor
                   </Typography>
-                  <Input
-                    color="secondary"
-                    sx={[
-                      {
-                        '&: hover': {
-                          backgroundColor: '#1b1b38',
-                        },
-                      },
-                      selectBaseStyles,
-                    ]}
+                  <Controller
+                    control={control}
+                    name="vendor"
+                    render={({ field }) => (
+                      <>
+                        <input
+                          {...field}
+                          type="text"
+                          list="vendors"
+                          style={selectBaseStyles}
+                          onChange={(e) => {
+                            // console.log('vendors', getValues('vendor'));
+                            // console.log('vendor', setVendors(e.target.value.data));
+                          }}
+                        />
+                        <datalist id="vendors">
+                          {vendors?.map((i) => (
+                            <option key={i.id} value={i.name} />
+                          ))}
+                        </datalist>
+                      </>
+                    )}
                   />
                 </Box>
               </Grid>
