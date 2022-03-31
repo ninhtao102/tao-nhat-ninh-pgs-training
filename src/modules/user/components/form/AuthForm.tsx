@@ -1,36 +1,26 @@
-import { Box, Button, Grid, Input, Typography } from '@mui/material';
+import { Box, Grid, Input, Typography } from '@mui/material';
 import React from 'react';
-import { Control, Controller, useForm } from 'react-hook-form';
-import { FormattedMessage } from 'react-intl';
+import { Control, Controller, UseFormGetValues, UseFormWatch } from 'react-hook-form';
 import { IUserParams } from '../../../../models/user';
 import { validEmailRegex } from '../../../../utils';
 import { titleAuthForm } from '../../constant';
 import { baseInputStyle } from '../../pages/AddUserPage';
-import Access from './Access';
-import Tax from './Tax';
 
 interface Props {
   control: Control<IUserParams, any>;
+  trigger: any;
+  errors?: any;
+  watch: UseFormWatch<IUserParams>;
+  getValues: UseFormGetValues<IUserParams>;
+  isDetail?: boolean;
 }
 
 const AuthForm = (props: Props) => {
-  const {
-    control,
-    register,
-    trigger,
-    getValues,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<IUserParams>({
-    mode: 'onBlur',
-  });
-
-  const onSubmit = (data: IUserParams) => {
-    console.log('data', data);
-  };
+  const { control, trigger, errors, watch, getValues, isDetail } = props;
+  const required = { required: { value: true, message: 'This field is requierd' } };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <>
       <Box sx={{ backgroundColor: '#1b1b38', padding: '0 5vh 5vh 5vh' }}>
         <Typography variant="h6" gutterBottom component="div" sx={{ color: '#fff' }}>
           Email &amp; password
@@ -55,6 +45,7 @@ const AuthForm = (props: Props) => {
               <Controller
                 control={control}
                 name="firstName"
+                rules={required}
                 render={({ field }) => (
                   <Input
                     {...field}
@@ -62,15 +53,12 @@ const AuthForm = (props: Props) => {
                     color="secondary"
                     autoComplete="off"
                     sx={[baseInputStyle, { marginTop: '2vh' }]}
-                    {...register('firstName', {
-                      required: true,
-                    })}
                   />
                 )}
               />
-              {errors?.firstName?.type === 'required' && (
+              {errors?.firstName?.message && (
                 <p className="valid-field--message" style={{ padding: '1vh' }}>
-                  <FormattedMessage id="firstNameRequire" />
+                  {errors?.firstName?.message}
                 </p>
               )}
             </Box>
@@ -79,6 +67,7 @@ const AuthForm = (props: Props) => {
               <Controller
                 control={control}
                 name="lastName"
+                rules={required}
                 render={({ field }) => (
                   <Input
                     {...field}
@@ -86,15 +75,12 @@ const AuthForm = (props: Props) => {
                     color="secondary"
                     autoComplete="off"
                     sx={[baseInputStyle, { marginTop: '2vh' }]}
-                    {...register('lastName', {
-                      required: true,
-                    })}
                   />
                 )}
               />
-              {errors?.lastName?.type === 'required' && (
+              {errors?.lastName?.message && (
                 <p className="valid-field--message" style={{ padding: '1vh' }}>
-                  <FormattedMessage id="lastNameRequire" />
+                  {errors?.lastName?.message}
                 </p>
               )}
             </Box>
@@ -103,6 +89,10 @@ const AuthForm = (props: Props) => {
               <Controller
                 control={control}
                 name="email"
+                rules={{
+                  ...required,
+                  pattern: { value: validEmailRegex, message: 'Email is invalid' },
+                }}
                 render={({ field }) => (
                   <Input
                     {...field}
@@ -110,21 +100,12 @@ const AuthForm = (props: Props) => {
                     color="secondary"
                     autoComplete="off"
                     sx={[baseInputStyle, { marginTop: '2vh' }]}
-                    {...register('email', {
-                      required: true,
-                      pattern: validEmailRegex,
-                    })}
                   />
                 )}
               />
-              {errors?.email?.type === 'required' && (
+              {errors?.email?.message && (
                 <p className="valid-field--message" style={{ padding: '1vh' }}>
-                  <FormattedMessage id="emailRequire" />
-                </p>
-              )}
-              {errors?.email?.type === 'pattern' && (
-                <p className="valid-field--message" style={{ padding: '1vh' }}>
-                  <FormattedMessage id="emailInvalid" />
+                  {errors?.email?.message}
                 </p>
               )}
             </Box>
@@ -134,7 +115,7 @@ const AuthForm = (props: Props) => {
                 control={control}
                 name="password"
                 rules={{
-                  required: { value: true, message: 'This field is requierd' },
+                  ...required,
                   minLength: { value: 6, message: 'Password must have at least 6 characters' },
                 }}
                 render={({ field: { onChange } }) => (
@@ -162,13 +143,13 @@ const AuthForm = (props: Props) => {
                 control={control}
                 name="confirm_password"
                 rules={{
-                  required: { value: true, message: 'This field is requierd' },
+                  ...required,
                   validate: { value: (value) => value === getValues('password') || 'The passwords do not match' },
                 }}
                 render={({ field: { onChange, ...props } }) => (
                   <Input
                     {...props}
-                    id="confirmPassword"
+                    id="confirm_password"
                     color="secondary"
                     type="password"
                     onChange={(e) => {
@@ -190,15 +171,9 @@ const AuthForm = (props: Props) => {
               <Controller
                 control={control}
                 name="paymentRailsType"
+                rules={required}
                 render={({ field }) => (
-                  <select
-                    {...field}
-                    {...register('paymentRailsType', {
-                      required: true,
-                    })}
-                    defaultValue={'Individual'}
-                    style={baseInputStyle}
-                  >
+                  <select {...field} defaultValue={'Individual'} style={baseInputStyle}>
                     <option value="Individual" style={baseInputStyle}>
                       Individual
                     </option>
@@ -208,49 +183,16 @@ const AuthForm = (props: Props) => {
                   </select>
                 )}
               />
-              {errors?.paymentRailsType?.type === 'required' && (
+              {errors?.paymentRailsType?.message && (
                 <p className="valid-field--message" style={{ padding: '1vh' }}>
-                  <FormattedMessage id="typeRequire" />
+                  {errors?.paymentRailsType?.message}
                 </p>
               )}
             </Box>
           </Grid>
         </Grid>
       </Box>
-      <Box>
-        <Access control={control} />
-        <Tax control={control} />
-      </Box>
-
-      <Box
-        sx={{
-          backgroundColor: '#323259',
-          margin: '0 5vh',
-          padding: '3vh 5vh',
-          boxShadow: '1px 1px 11px #b18aff',
-          width: '75%',
-          position: 'fixed',
-          top: '88vh',
-        }}
-      >
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{
-            display: 'flex',
-            marginRight: '2vh',
-            opacity: '0.5',
-            backgroundColor: '#f0ad4e',
-            '&: hover': {
-              backgroundColor: '#f0ad4e',
-              color: '#000',
-            },
-          }}
-        >
-          Add User
-        </Button>
-      </Box>
-    </form>
+    </>
   );
 };
 
