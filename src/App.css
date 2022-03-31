@@ -79,3 +79,14 @@
 .activeNavLink {
   color: #b18aff;
 }
+
+.modal_content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  background-color: #323259;
+  height: 200px;
+  width: 390px;
+  border-radius: 5px;
+}
