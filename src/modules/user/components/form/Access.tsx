@@ -1,16 +1,19 @@
 import { Box, Checkbox, Grid, Typography } from '@mui/material';
 import React from 'react';
-import { Control, Controller } from 'react-hook-form';
+import { Control, Controller, UseFormWatch } from 'react-hook-form';
 import { IUserParams } from '../../../../models/user';
 import { titleAccessForm } from '../../constant';
 import { baseInputStyle } from '../../pages/AddUserPage';
 
 interface Props {
   control: Control<IUserParams, any>;
+  watch: UseFormWatch<IUserParams>;
+  errors: any;
+  isDetail?: boolean;
 }
 
 const Access = (props: Props) => {
-  const { control } = props;
+  const { control, watch, errors, isDetail } = props;
 
   return (
     <form>
@@ -52,26 +55,19 @@ const Access = (props: Props) => {
                   </select>
                 )}
               />
-              {/* {errors?.access_level?.message && (
+              {errors?.access_level?.message && (
                 <p className="valid-field--message" style={{ padding: '1vh' }}>
                   {errors?.access_level?.message}
                 </p>
-              )} */}
+              )}
             </Box>
 
             <Box sx={{ display: 'flex', marginTop: '2vh' }}>
               <Controller
                 control={control}
-                name="memberShip"
+                name="membership_id"
                 render={({ field }) => (
-                  <select
-                    {...field}
-                    // {...register('memberShip', {
-                    //   required: false,
-                    // })}
-                    defaultValue={'Ignore Membership'}
-                    style={baseInputStyle}
-                  >
+                  <select {...field} defaultValue={'Ignore Membership'} style={baseInputStyle}>
                     <option value="Ignore Membership" style={baseInputStyle}>
                       Ignore Membership
                     </option>
@@ -85,9 +81,9 @@ const Access = (props: Props) => {
 
             <Controller
               control={control}
-              name="require"
+              name="forceChangePassword"
               render={({ field }) => (
-                <Checkbox {...field} id="require-checkbox" sx={{ color: '#fff', margin: '2vh 0' }} />
+                <Checkbox {...field} id="forceChangePassword-checkbox" sx={{ color: '#fff', margin: '2vh 0' }} />
               )}
             />
           </Grid>
