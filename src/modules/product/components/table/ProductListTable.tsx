@@ -18,6 +18,7 @@ import {
 import moment from 'moment';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { ROUTES } from '../../../../configs/routes';
 import { IProductItem } from '../../../../models/product';
 import { ISort } from '../../../../models/utils';
 import { columns } from '../../constant';
@@ -30,12 +31,14 @@ interface Props {
   totalItem: undefined;
   pageInfo: number;
   handleSort: (id: string) => void;
-  handleCheckItem: (checked: any) => void;
+  handleCheckAll: (check: boolean) => void;
+  handleCheckItem: (id: string) => void;
   handleChangePage: (event: React.MouseEvent<HTMLButtonElement, MouseEvent> | null, number: number) => void;
 }
 
 const ProductListTable = (props: Props) => {
-  const { tableData, sortInfo, totalItem, pageInfo, handleSort, handleCheckItem, handleChangePage } = props;
+  const { tableData, sortInfo, totalItem, pageInfo, handleSort, handleCheckAll, handleCheckItem, handleChangePage } =
+    props;
 
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [openModalUpdate, setOpenModalUpdate] = React.useState(false);
@@ -63,12 +66,18 @@ const ProductListTable = (props: Props) => {
               minWidth: 650,
               backgroundColor: '#323259',
             }}
-            aria-label="simple table"
           >
             <TableHead>
               <TableRow>
                 <TableCell align="left">
-                  <Checkbox size="small" sx={{ color: '#fff' }} />
+                  <Checkbox
+                    size="small"
+                    sx={{ color: '#fff' }}
+                    onChange={(e, check) => {
+                      handleCheckAll(check);
+                      console.log('🚀 ~ file: ProductListTable.tsx ~ line 76 ~ ProductListTable ~ check', check);
+                    }}
+                  />
                 </TableCell>
 
                 {columns.map((col) => {
@@ -127,7 +136,13 @@ const ProductListTable = (props: Props) => {
                         size="small"
                         sx={{ color: '#fff' }}
                         checked={item.checked}
-                        // onChange={() => onCheckBox(item.id)}
+                        onChange={() => {
+                          handleCheckItem(item.id);
+                          console.log(
+                            '🚀 ~ file: ProductListTable.tsx ~ line 131 ~ ProductListTable ~ checked',
+                            item.checked,
+                          );
+                        }}
                       />
                       <Button onClick={handleOpenModalUpdate}>
                         <PowerSettingsNewRoundedIcon
@@ -149,7 +164,7 @@ const ProductListTable = (props: Props) => {
                       </Modal>
                     </Box>
                   </TableCell>
-                  <TableCell align="left" sx={{ color: '#fff', width: '80px' }}>
+                  <TableCell align="left" sx={{ color: '#fff', width: '80px', overflow: 'hidden' }}>
                     {item.sku}
                   </TableCell>
                   <TableCell
@@ -164,7 +179,8 @@ const ProductListTable = (props: Props) => {
                     <Link
                       className="detailLink"
                       style={{ textDecoration: 'none' }}
-                      to="/products/product-detail/{product_id}"
+                      // to="/products/product-detail/{product_id}"
+                      to={`${ROUTES.productDetail}`}
                     >
                       {item.name}
                     </Link>
@@ -191,7 +207,12 @@ const ProductListTable = (props: Props) => {
                       textOverflow: 'ellipsis',
                     }}
                   >
-                    <Link className="detailLink" style={{ textDecoration: 'none' }} to="/user/user-detail/{id}">
+                    <Link
+                      className="detailLink"
+                      style={{ textDecoration: 'none' }}
+                      // to="/user/user-detail/{id}"
+                      to={`${ROUTES.productDetail}`}
+                    >
                       {item.vendor}
                     </Link>
                   </TableCell>
