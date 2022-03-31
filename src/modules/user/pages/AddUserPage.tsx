@@ -1,10 +1,14 @@
 import KeyboardBackspaceRoundedIcon from '@mui/icons-material/KeyboardBackspaceRounded';
 import { Box, Button, Typography } from '@mui/material';
-import React from 'react';
-import { Control } from 'react-hook-form';
+import React, { useCallback } from 'react';
+import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
+import { API_HEADER, API_PATHS } from '../../../configs/api';
+import { ROUTES } from '../../../configs/routes';
 import { IUserParams } from '../../../models/user';
+import Access from '../components/form/Access';
 import AuthForm from '../components/form/AuthForm';
+import Tax from '../components/form/Tax';
 
 export const baseInputStyle = {
   backgroundColor: '#252547',
@@ -28,17 +32,42 @@ export const selectBaseStyles = {
   borderRadius: '5px',
 };
 
-interface Props {
-  control: Control<IUserParams, any>;
-}
+const AddUserPage = () => {
+  const {
+    control,
+    trigger,
+    watch,
+    getValues,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<IUserParams>({
+    mode: 'onChange',
+  });
 
-const AddUserPage = (props: Props) => {
-  const { control } = props;
+  const onSubmit = useCallback((data: IUserParams) => {
+    console.log('🚀 ~ file: AddUserPage.tsx ~ line 41 ~ onSubmit ~ data', data);
+
+    fetch(API_PATHS.usersCreate, {
+      method: 'post',
+      ...API_HEADER,
+      body: JSON.stringify({
+        ...data,
+      }),
+    })
+      .then((response) => response.json())
+      .then((result) => {
+        console.log('Create User Success:', result);
+        alert('Create user success');
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+  }, []);
 
   return (
     <div style={{ flex: '1', backgroundColor: '#323259' }}>
-      <Box sx={{ backgroundColor: '#1b1b38', padding: '1vh 5vh' }}>
-        <Link style={{ textDecoration: 'none' }} to="/user/manage-user">
+      <Box sx={{ backgroundColor: '#1b1b38' }}>
+        <Link style={{ textDecoration: 'none', margin: '5vh' }} to={`${ROUTES.userList}`}>
           <Button
             variant="contained"
             sx={{
@@ -53,11 +82,58 @@ const AddUserPage = (props: Props) => {
           </Button>
         </Link>
 
-        <Typography variant="h4" gutterBottom component="div" sx={{ color: '#fff' }}>
-          Create profile
-        </Typography>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Typography
+            variant="h4"
+            gutterBottom
+            component="div"
+            sx={{ color: '#fff', margin: '2vh 5vh', fontWeight: 'bold' }}
+          >
+            Create profile
+          </Typography>
+          <Box sx={{ backgroundColor: '#323259' }}>
+            <AuthForm
+              control={control}
+              trigger={trigger}
+              watch={watch}
+              getValues={getValues}
+              errors={errors}
+              isDetail={false}
+            />
+            <Access control={control} watch={watch} errors={errors} isDetail={false} />
+            <Tax control={control} />
+          </Box>
+
+          <div
+            style={{
+              backgroundColor: '#323259',
+              margin: '0 5vh',
+              padding: '3vh 5vh',
+              boxShadow: '1px 1px 11px #b18aff',
+              width: '74%',
+              position: 'fixed',
+              top: '88vh',
+            }}
+          >
+            <Button
+              variant="contained"
+              disabled={!isValid}
+              type="submit"
+              sx={{
+                display: 'flex',
+                width: '180px',
+                backgroundColor: '#f0ad4e',
+                '&: hover': {
+                  backgroundColor: '#f0ad4e',
+                  color: '#000',
+                },
+              }}
+            >
+              Create User
+            </Button>
+          </div>
+        </form>
       </Box>
-      <AuthForm control={control} />
     </div>
   );
 };
