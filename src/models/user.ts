@@ -15,7 +15,7 @@ export interface IUser {
 }
 
 export interface IUserItem {
-  id: string;
+  profile_id: string;
   vendor: string;
   storeName: string;
   fistName: string;
@@ -29,19 +29,37 @@ export interface IUserItem {
   wishlist: string;
   created: string;
   last_login: string;
+  checked?: boolean
 }
-
 export interface IUserParams {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  confirm_password: string;
-  paymentRailsType: string;
-  access_level: string;
-  memberShip: string;
-  require: boolean;
-  taxExempt: boolean;
-  forceChangePassword: number;
-  membership_id: string;
+  access_level: string
+  companyName: string | undefined
+  default_card_id: string
+  earning: number
+  email: string
+  password?: string;
+  confirm_password?: string;
+  expense: string
+  firstName: string
+  first_login: string
+  forceChangePassword: string
+  income: string
+  joined: string
+  language: string
+  lastName: string
+  last_login: string
+  membership_id: string | undefined
+  order_as_buyer: number
+  order_as_buyer_total: number
+  paymentRailsId: string | undefined
+  paymentRailsType: string | string | undefined
+  pending_membership_id: string | undefined
+  products_total: string
+  profile_id: string
+  referer: string
+  roles: []
+  status: string
+  statusComment: string
+  taxExempt: string
+  vendor_id: string
 }
