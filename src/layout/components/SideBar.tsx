@@ -4,7 +4,8 @@ import GroupOutlinedIcon from '@mui/icons-material/GroupOutlined';
 import LocalOfferOutlinedIcon from '@mui/icons-material/LocalOfferOutlined';
 import { Collapse, Drawer, List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useParams, useRouteMatch } from 'react-router-dom';
+import { ROUTES } from '../../configs/routes';
 
 interface Props {
   sideBarOpen: boolean;
@@ -20,6 +21,10 @@ const SideBar = (props: Props) => {
   const location = useLocation();
   const currentPath = location.pathname;
 
+  const { id } = useParams() as {
+    id: string;
+  };
+
   const handleClickCatalog = () => {
     setOpenCatalog(!openCatalog);
   };
@@ -29,19 +34,27 @@ const SideBar = (props: Props) => {
 
   useEffect(() => {
     switch (currentPath) {
-      case '/products/manage-product':
+      case `${ROUTES.productList}`:
         setproductNav('#6f53b4');
         setuserNav('#fff');
         break;
-      case '/products/new-product':
+      case `${ROUTES.productForm}`:
         setproductNav('#6f53b4');
         setuserNav('#fff');
         break;
-      case '/user/manage-user':
+      case `${ROUTES.productDetail}/:id`:
+        setproductNav('#6f53b4');
+        setuserNav('#fff');
+        break;
+      case `${ROUTES.userList}`:
         setuserNav('#6f53b4');
         setproductNav('#fff');
         break;
-      case '/user/new-user':
+      case `${ROUTES.userForm}`:
+        setuserNav('#6f53b4');
+        setproductNav('#fff');
+        break;
+      case `${ROUTES.userDetail}/:id`:
         setuserNav('#6f53b4');
         setproductNav('#fff');
         break;
@@ -49,7 +62,7 @@ const SideBar = (props: Props) => {
         setproductNav('#fff');
         setuserNav('#fff');
     }
-  }, [currentPath]);
+  }, [currentPath, id]);
 
   return (
     <div style={{ backgroundColor: '#323259', marginTop: '64px', zIndex: 1, boxShadow: '1px 1px 8px black' }}>
@@ -84,7 +97,7 @@ const SideBar = (props: Props) => {
           <Collapse in={openCatalog} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
               <Link
-                to="/products/manage-product"
+                to={`${ROUTES.productList}`}
                 className="navLink"
                 style={{
                   color: productNav,
@@ -111,7 +124,7 @@ const SideBar = (props: Props) => {
           </ListItemButton>
           <Collapse in={openUsers} timeout="auto" unmountOnExit>
             <List component="div" disablePadding>
-              <Link to="/user/manage-user" id="userListLink" className="navLink" style={{ color: userNav }}>
+              <Link to={`${ROUTES.userList}`} id="userListLink" className="navLink" style={{ color: userNav }}>
                 <ListItemButton
                   sx={{ mx: 2, borderTop: '1px solid #000', ':hover #userListLink': { color: '#6f53b4' } }}
                 >
