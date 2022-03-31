@@ -43,3 +43,24 @@ export const options = [
   { id: '1', name: 'Membership' },
   { id: '2', name: 'Pending membership' },
 ];
+
+export const titleExtenInfo = [
+  { title: 'Orders placed as a buyer' },
+  { title: 'Vendor Income' },
+  { title: 'Vendor Expense' },
+  { title: 'Earning balance' },
+  { title: 'Products listed as vendor' },
+  { title: 'Joined' },
+  { title: 'Last login' },
+  { title: 'Language' },
+  { title: 'Referer' }
+]
+
+export const titleAccessDetail = [
+  { title: 'Access level', require: false, mgT: '0vh' },
+  { title: 'Account status', require: true, mgT: '0vh' },
+  { title: 'Status comment(reason)', require: false, mgT: '0vh' },
+  { title: 'Membership', require: false, mgT: '7vh' },
+  { title: 'Pending membership', require: false, mgT: '1vh' },
+  { title: 'Require to change password on next log in', require: false, mgT: '0vh' },
+];
