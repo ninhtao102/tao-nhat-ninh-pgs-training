@@ -1,6 +1,7 @@
 # Admin Dashboard Page
 Language: TypeScript.
-Library: ReactJS, Material UI, React Hook Form.
+Technology: ReactJS, Redux
+Library: Material UI, React Hook Form.
 
 
 ## Login by Email
