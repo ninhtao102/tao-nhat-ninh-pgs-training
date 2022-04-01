@@ -18,60 +18,40 @@ export interface IProductItem {
 }
 
 export interface IProductParams {
-  vendor: string;
-  productTitle: string;
+  arrival_date: Date | null;
   brand: string;
-  condition: string;
-  sku: string;
-  images: any;
-  category: string;
-  description: any;
-  membership: string;
-  tax: boolean;
-  price: string;
-  sale: boolean;
-  saledPrice: string;
-  arrivalDate: Date | null;
-  quantityInStock: string;
-  continental: string;
-  zone: string;
-  metaTags: string;
-  metaDesc: string;
-  metaKeywords: string;
-  productPageTitle: string;
-}
-
-export interface IProductDetail {
-  arrival_date: string;
   brand_id: string;
   categories: [];
-  cleanURL: string;
   code: string;
+  continental: string;
   condition_id: string;
-  description: string;
+  cleanURL: string;
   enabled: string;
+  description: any;
   facebook_marketing_enabled: string;
   google_feed_enabled: string;
-  id: string;
-  images: [];
+  images: any;
+  // images: [];
   inventory_tracking: string;
-  memberships: [];
+  memberships: []
   meta_desc_type: string;
   meta_description: string;
   meta_keywords: string;
-  name: string;
+  name: string
   og_tags: string;
   og_tags_type: string;
   participate_sale: string;
   price: string;
   product_page_title: string;
   quantity: string;
+  sale: boolean;
   sale_price: string;
   sale_price_type: string;
-  shipping: [];
   sku: string;
+  shipping_to_zone: [];
   sort_description: string;
   tax_exempt: string;
   vendor_id: string;
-  weight: string;
+  zone: string;
 }
+
